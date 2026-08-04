@@ -23,7 +23,7 @@ class StatsRepositoryImpl(
         val activeSeconds = protectionSessionDao.getAll().sumOf { session ->
             val start = maxOf(session.startTimestamp, startOfDay)
             val end = minOf(session.endTimestamp ?: now, now)
-            (end - start).coerceAtLeast(0L)
+            ((end - start) / 1000L).coerceAtLeast(0L)
         }
 
         return DailyStats(
