@@ -67,22 +67,12 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
     }
 
     private val repository = EyeGuardContainer.settingsRepository
-
-    private val windowManager by lazy {
-        getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    }
-
-    private val alarmManager by lazy {
-        getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    }
-
-    private val powerManager by lazy {
-        getSystemService(Context.POWER_SERVICE) as PowerManager
-    }
+    private val statsRepository = EyeGuardContainer.statsRepository
 
     private var overlayView: ComposeView? = null
     private var breakJob: Job? = null
     private var breakWakeLock: PowerManager.WakeLock? = null
+    private var currentBreakEventId: Long = 0L
 
     private val savedStateRegistryController = SavedStateRegistryController.create(this@EyeProtectionService)
 
@@ -131,6 +121,8 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
                     }
 
                     val settings = repository.settings.first()
+
+                    statsRepository.recordProtectionStarted()
 
                     if (testIntervalSeconds > 0) {
                         scheduleBreakAlarm(
@@ -477,6 +469,8 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
         breakJob?.cancel()
 
         breakJob = lifecycleScope.launch {
+            currentBreakEventId = statsRepository.recordBreakStarted(breakDurationSeconds)
+
             for (second in breakDurationSeconds downTo 1) {
                 remainingSeconds.value = second
                 delay(1_000)
@@ -485,6 +479,11 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
             finished.value = true
             enableOverlayTouches()
             Log.d(TAG, "Break countdown finished; touches enabled")
+
+            if (currentBreakEventId != 0L) {
+                statsRepository.markBreakCompleted(currentBreakEventId)
+                currentBreakEventId = 0L
+            }
 
             val settings = repository.settings.first()
             triggerBreakEndAlert(settings.breakEndAlertType)
@@ -637,6 +636,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
     private fun hideOverlay() {
         breakJob?.cancel()
         breakJob = null
+        currentBreakEventId = 0L
 
         overlayView?.let { view ->
             try {
@@ -656,6 +656,8 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
         hideOverlay()
 
         lifecycleScope.launch {
+            statsRepository.recordProtectionStopped()
+
             repository.update {
                 it.copy(enabled = false)
             }

@@ -18,7 +18,8 @@ class MainActivity : ComponentActivity() {
                 MainScreen(
                     viewModel = viewModel(
                         factory = EyeGuardViewModelFactory(
-                            EyeGuardContainer.settingsRepository
+                            EyeGuardContainer.settingsRepository,
+                            EyeGuardContainer.statsRepository
                         )
                     )
                 )

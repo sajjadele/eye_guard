@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.eyeguard.domain.models.BreakEndAlertType
+import com.example.eyeguard.domain.models.DailyStats
 import com.example.eyeguard.domain.models.EyeGuardSettings
 import com.example.eyeguard.domain.repository.SettingsRepository
+import com.example.eyeguard.domain.repository.StatsRepository
 import com.example.eyeguard.domain.usecases.ObserveSettingsUseCase
 import com.example.eyeguard.domain.usecases.UpdateSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,12 +19,14 @@ import kotlinx.coroutines.launch
 
 data class MainUiState(
     val settings: EyeGuardSettings = EyeGuardSettings(),
+    val dailyStats: DailyStats = DailyStats.EMPTY,
     val isLoading: Boolean = true
 )
 
 class EyeGuardViewModel(
     private val observeSettings: ObserveSettingsUseCase,
-    private val updateSettings: UpdateSettingsUseCase
+    private val updateSettings: UpdateSettingsUseCase,
+    private val statsRepository: StatsRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
@@ -31,12 +35,21 @@ class EyeGuardViewModel(
     init {
         observeSettings()
             .onEach { settings ->
-                _uiState.value = MainUiState(
+                _uiState.value = _uiState.value.copy(
                     settings = settings,
                     isLoading = false
                 )
             }
             .launchIn(viewModelScope)
+
+        refreshDailyStats()
+    }
+
+    fun refreshDailyStats() {
+        viewModelScope.launch {
+            val stats = statsRepository.getDailyStats()
+            _uiState.value = _uiState.value.copy(dailyStats = stats)
+        }
     }
 
     fun setWorkInterval(minutes: Int) {
@@ -63,15 +76,17 @@ class EyeGuardViewModel(
 }
 
 class EyeGuardViewModelFactory(
-    private val repository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val statsRepository: StatsRepository
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(EyeGuardViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return EyeGuardViewModel(
-                ObserveSettingsUseCase(repository),
-                UpdateSettingsUseCase(repository)
+                ObserveSettingsUseCase(settingsRepository),
+                UpdateSettingsUseCase(settingsRepository),
+                statsRepository
             ) as T
         }
 

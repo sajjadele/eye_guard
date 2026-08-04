@@ -56,6 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.eyeguard.BuildConfig
 import com.example.eyeguard.R
 import com.example.eyeguard.domain.models.BreakEndAlertType
+import com.example.eyeguard.domain.models.DailyStats
 import com.example.eyeguard.domain.models.EyeGuardSettings
 import com.example.eyeguard.presentation.EyeGuardViewModel
 import com.example.eyeguard.presentation.components.PermissionCard
@@ -103,6 +104,7 @@ fun MainScreen(
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 refreshPermissions()
+                viewModel.refreshDailyStats()
             }
         }
 
@@ -171,6 +173,10 @@ fun MainScreen(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.fillMaxWidth()
+                )
+
+                DailyStatsCard(
+                    stats = uiState.dailyStats
                 )
 
                 // Permission cards
@@ -471,6 +477,67 @@ fun MainScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun DailyStatsCard(
+    stats: DailyStats,
+    modifier: Modifier = Modifier
+) {
+    ElevatedCard(modifier = modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.stats_title),
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            Text(
+                text = stringResource(R.string.stats_breaks_done, stats.breaksCompleted),
+                style = MaterialTheme.typography.bodyMedium
+            )
+
+            Text(
+                text = stringResource(
+                    R.string.stats_active_protection,
+                    formatDuration(stats.activeSeconds)
+                ),
+                style = MaterialTheme.typography.bodyMedium
+            )
+
+            Text(
+                text = stringResource(
+                    R.string.stats_break_time,
+                    formatDuration(stats.breakSeconds)
+                ),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
+}
+
+@Composable
+private fun formatDuration(seconds: Long): String {
+    if (seconds < 60) {
+        return stringResource(R.string.format_seconds, seconds)
+    }
+
+    val totalMinutes = seconds / 60
+    val hours = totalMinutes / 60
+    val minutes = totalMinutes % 60
+
+    return when {
+        hours >= 1 && minutes > 0 ->
+            stringResource(R.string.format_hours_minutes, hours, minutes)
+        hours >= 1 ->
+            stringResource(R.string.format_hours, hours)
+        else ->
+            stringResource(R.string.format_minutes, totalMinutes)
     }
 }
 
