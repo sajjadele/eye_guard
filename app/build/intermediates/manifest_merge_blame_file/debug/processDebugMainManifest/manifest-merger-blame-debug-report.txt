@@ -48,8 +48,8 @@
 27-->[androidx.core:core:1.13.1] /home/sajjad/.gradle/caches/transforms-4/5779178c2978878319631b902ade4863/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
 28        android:debuggable="true"
 29        android:extractNativeLibs="false"
-30        android:label="EyeGuard"
-30-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:16:9-33
+30        android:label="@string/app_name"
+30-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:16:9-41
 31        android:supportsRtl="true"
 31-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:17:9-35
 32        android:theme="@style/Theme.EyeGuard" >

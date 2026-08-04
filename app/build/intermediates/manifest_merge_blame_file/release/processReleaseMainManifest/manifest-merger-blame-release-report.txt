@@ -1,0 +1,165 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.eyeguard"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+11-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:4:5-78
+11-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:4:22-75
+12    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+12-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:5:5-77
+12-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:5:22-74
+13    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+13-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:7:5-77
+13-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:7:22-74
+14    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+14-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:8:5-89
+14-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:8:22-86
+15    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+15-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:10:5-79
+15-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:10:22-76
+16    <uses-permission android:name="android.permission.WAKE_LOCK" />
+16-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:11:5-68
+16-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:11:22-65
+17
+18    <permission
+18-->[androidx.core:core:1.13.1] /home/sajjad/.gradle/caches/transforms-4/5779178c2978878319631b902ade4863/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+19        android:name="com.example.eyeguard.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+19-->[androidx.core:core:1.13.1] /home/sajjad/.gradle/caches/transforms-4/5779178c2978878319631b902ade4863/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+20        android:protectionLevel="signature" />
+20-->[androidx.core:core:1.13.1] /home/sajjad/.gradle/caches/transforms-4/5779178c2978878319631b902ade4863/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+21
+22    <uses-permission android:name="com.example.eyeguard.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+22-->[androidx.core:core:1.13.1] /home/sajjad/.gradle/caches/transforms-4/5779178c2978878319631b902ade4863/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+22-->[androidx.core:core:1.13.1] /home/sajjad/.gradle/caches/transforms-4/5779178c2978878319631b902ade4863/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+23
+24    <application
+24-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:13:5-44:19
+25        android:name="com.example.eyeguard.EyeGuardApp"
+25-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:14:9-36
+26        android:allowBackup="true"
+26-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:15:9-35
+27        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+27-->[androidx.core:core:1.13.1] /home/sajjad/.gradle/caches/transforms-4/5779178c2978878319631b902ade4863/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
+28        android:extractNativeLibs="false"
+29        android:label="@string/app_name"
+29-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:16:9-41
+30        android:supportsRtl="true"
+30-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:17:9-35
+31        android:theme="@style/Theme.EyeGuard" >
+31-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:18:9-46
+32        <activity
+32-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:20:9-32:20
+33            android:name="com.example.eyeguard.presentation.MainActivity"
+33-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:21:13-54
+34            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+34-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:26:13-87
+35            android:exported="true"
+35-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:22:13-36
+36            android:launchMode="singleTop"
+36-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:23:13-43
+37            android:showWhenLocked="true"
+37-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:24:13-42
+38            android:turnScreenOn="true" >
+38-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:25:13-40
+39            <intent-filter>
+39-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:28:13-31:29
+40                <action android:name="android.intent.action.MAIN" />
+40-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:29:17-69
+40-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:29:25-66
+41
+42                <category android:name="android.intent.category.LAUNCHER" />
+42-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:30:17-77
+42-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:30:27-74
+43            </intent-filter>
+44        </activity>
+45
+46        <service
+46-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:34:9-42:19
+47            android:name="com.example.eyeguard.service.EyeProtectionService"
+47-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:35:13-57
+48            android:exported="false"
+48-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:36:13-37
+49            android:foregroundServiceType="specialUse" >
+49-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:37:13-55
+50            <property
+50-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:39:13-41:113
+51                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+51-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:40:17-76
+52                android:value="Shows periodic eye-rest reminders while the user is actively using the device" />
+52-->/home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:41:17-110
+53        </service>
+54
+55        <provider
+55-->[androidx.emoji2:emoji2:1.3.0] /home/sajjad/.gradle/caches/transforms-4/60e95860ed21329a973b7887d85e5306/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+56            android:name="androidx.startup.InitializationProvider"
+56-->[androidx.emoji2:emoji2:1.3.0] /home/sajjad/.gradle/caches/transforms-4/60e95860ed21329a973b7887d85e5306/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+57            android:authorities="com.example.eyeguard.androidx-startup"
+57-->[androidx.emoji2:emoji2:1.3.0] /home/sajjad/.gradle/caches/transforms-4/60e95860ed21329a973b7887d85e5306/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+58            android:exported="false" >
+58-->[androidx.emoji2:emoji2:1.3.0] /home/sajjad/.gradle/caches/transforms-4/60e95860ed21329a973b7887d85e5306/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+59            <meta-data
+59-->[androidx.emoji2:emoji2:1.3.0] /home/sajjad/.gradle/caches/transforms-4/60e95860ed21329a973b7887d85e5306/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+60                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+60-->[androidx.emoji2:emoji2:1.3.0] /home/sajjad/.gradle/caches/transforms-4/60e95860ed21329a973b7887d85e5306/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+61                android:value="androidx.startup" />
+61-->[androidx.emoji2:emoji2:1.3.0] /home/sajjad/.gradle/caches/transforms-4/60e95860ed21329a973b7887d85e5306/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+62            <meta-data
+62-->[androidx.lifecycle:lifecycle-process:2.8.2] /home/sajjad/.gradle/caches/transforms-4/0d3b5d831c356b7944443560218111b4/transformed/lifecycle-process-2.8.2/AndroidManifest.xml:29:13-31:52
+63                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+63-->[androidx.lifecycle:lifecycle-process:2.8.2] /home/sajjad/.gradle/caches/transforms-4/0d3b5d831c356b7944443560218111b4/transformed/lifecycle-process-2.8.2/AndroidManifest.xml:30:17-78
+64                android:value="androidx.startup" />
+64-->[androidx.lifecycle:lifecycle-process:2.8.2] /home/sajjad/.gradle/caches/transforms-4/0d3b5d831c356b7944443560218111b4/transformed/lifecycle-process-2.8.2/AndroidManifest.xml:31:17-49
+65            <meta-data
+65-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+66                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+66-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+67                android:value="androidx.startup" />
+67-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+68        </provider>
+69
+70        <receiver
+70-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+71            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+71-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+72            android:directBootAware="false"
+72-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+73            android:enabled="true"
+73-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+74            android:exported="true"
+74-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+75            android:permission="android.permission.DUMP" >
+75-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+76            <intent-filter>
+76-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+77                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+77-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+77-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+78            </intent-filter>
+79            <intent-filter>
+79-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+80                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+80-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+80-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+81            </intent-filter>
+82            <intent-filter>
+82-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+83                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+83-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+83-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+84            </intent-filter>
+85            <intent-filter>
+85-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+86                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+86-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+86-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/sajjad/.gradle/caches/transforms-4/9d1c3e4e90e6ee77a1d0add1aee91c7e/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+87            </intent-filter>
+88        </receiver>
+89    </application>
+90
+91</manifest>

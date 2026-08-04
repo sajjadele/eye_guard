@@ -109,7 +109,7 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] /home/sajjad/.gradle/caches
 	android:supportsRtl
 		ADDED from /home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:17:9-35
 	android:label
-		ADDED from /home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:16:9-33
+		ADDED from /home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:16:9-41
 	android:allowBackup
 		ADDED from /home/sajjad/Desktop/code/eye_guard/app/src/main/AndroidManifest.xml:15:9-35
 	android:theme

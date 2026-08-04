@@ -20,9 +20,14 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.savedstate.SavedStateRegistry
+import androidx.savedstate.SavedStateRegistryController
+import androidx.savedstate.SavedStateRegistryOwner
+import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.example.eyeguard.EyeGuardContainer
 import com.example.eyeguard.R
 import com.example.eyeguard.presentation.MainActivity
@@ -34,7 +39,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
-class EyeProtectionService : LifecycleService() {
+class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
 
     companion object {
         const val ACTION_START = "ACTION_START"
@@ -45,10 +50,13 @@ class EyeProtectionService : LifecycleService() {
 
         const val EXTRA_WORK_MINUTES = "EXTRA_WORK_MINUTES"
         const val EXTRA_BREAK_SECONDS = "EXTRA_BREAK_SECONDS"
+        const val EXTRA_TEST_INTERVAL_SECONDS = "EXTRA_TEST_INTERVAL_SECONDS"
 
         private const val TAG = "EyeProtectionService"
         private const val NOTIFICATION_ID = 1
+        private const val ERROR_NOTIFICATION_ID = 2
         private const val CHANNEL_ID = "eye_guard_channel"
+        private const val CHANNEL_INFO_ID = "eye_guard_info_channel"
         private const val REMINDER_DELAY_MINUTES = 5
         private const val REQUEST_CODE_REMINDER = 2
     }
@@ -71,9 +79,16 @@ class EyeProtectionService : LifecycleService() {
     private var breakJob: Job? = null
     private var breakWakeLock: PowerManager.WakeLock? = null
 
+    private val savedStateRegistryController = SavedStateRegistryController.create(this@EyeProtectionService)
+
+    override val savedStateRegistry: SavedStateRegistry
+        get() = savedStateRegistryController.savedStateRegistry
+
     override fun onCreate() {
+        savedStateRegistryController.performAttach()
         super.onCreate()
         createNotificationChannel()
+        savedStateRegistryController.performRestore(null)
     }
 
     override fun onStartCommand(
@@ -91,6 +106,9 @@ class EyeProtectionService : LifecycleService() {
 
                 val workIntervalMinutes = intent.getIntExtra(EXTRA_WORK_MINUTES, -1)
                 val breakDurationSeconds = intent.getIntExtra(EXTRA_BREAK_SECONDS, -1)
+                val testIntervalSeconds = intent.getIntExtra(EXTRA_TEST_INTERVAL_SECONDS, -1)
+
+                Log.d(TAG, "Protection started (work=$workIntervalMinutes, break=$breakDurationSeconds, test=$testIntervalSeconds)")
 
                 lifecycleScope.launch {
                     if (workIntervalMinutes > 0 && breakDurationSeconds > 0) {
@@ -108,11 +126,20 @@ class EyeProtectionService : LifecycleService() {
                     }
 
                     val settings = repository.settings.first()
-                    scheduleBreakAlarm(settings.workIntervalMinutes)
+
+                    if (testIntervalSeconds > 0) {
+                        scheduleBreakAlarm(
+                            workIntervalMinutes = -1,
+                            testIntervalSeconds = testIntervalSeconds
+                        )
+                    } else {
+                        scheduleBreakAlarm(settings.workIntervalMinutes)
+                    }
                 }
             }
 
             ACTION_SHOW_BREAK -> {
+                Log.d(TAG, "Break alarm fired")
                 lifecycleScope.launch {
                     val settings = repository.settings.first()
 
@@ -214,13 +241,13 @@ class EyeProtectionService : LifecycleService() {
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_eye)
-            .setContentTitle("\uD83D\uDC41 \u0645\u0648\u0642\u0639\u06CC\u062A \u0686\u0634\u0645 \u0641\u0639\u0627\u0644 \u0627\u0633\u062A")
-            .setContentText("\u0632\u0645\u0627\u0646\u0628\u0646\u062F\u06CC \u0633\u062A\u0631\u0627\u062D\u062A \u0627\u0635\u0644\u06CC \u0627\u0633\u062A")
+            .setContentTitle(getString(R.string.notification_title))
+            .setContentText(getString(R.string.notification_text))
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setContentIntent(contentIntent)
-            .addAction(0, "\u062A\u0648\u0642\u0641", stopPendingIntent)
+            .addAction(0, getString(R.string.notification_stop), stopPendingIntent)
             .build()
     }
 
@@ -234,18 +261,35 @@ class EyeProtectionService : LifecycleService() {
                 setShowBadge(false)
             }
 
+            val infoChannel = NotificationChannel(
+                CHANNEL_INFO_ID,
+                "Eye Protection Info",
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                setShowBadge(false)
+            }
+
             val notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
             notificationManager.createNotificationChannel(channel)
+            notificationManager.createNotificationChannel(infoChannel)
         }
     }
 
-    private fun scheduleBreakAlarm(workIntervalMinutes: Int) {
+    private fun scheduleBreakAlarm(
+        workIntervalMinutes: Int,
+        testIntervalSeconds: Int = -1
+    ) {
         cancelAlarm()
 
-        val triggerAtMillis = System.currentTimeMillis() +
+        val delayMillis: Long = if (testIntervalSeconds > 0) {
+            TimeUnit.SECONDS.toMillis(testIntervalSeconds.toLong())
+        } else {
             TimeUnit.MINUTES.toMillis(workIntervalMinutes.toLong())
+        }
+
+        val triggerAtMillis = System.currentTimeMillis() + delayMillis
 
         scheduleAlarm(ACTION_SHOW_BREAK, 0, triggerAtMillis)
     }
@@ -276,6 +320,7 @@ class EyeProtectionService : LifecycleService() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
                 !alarmManager.canScheduleExactAlarms()
             ) {
+                Log.w(TAG, "Exact alarm permission missing; scheduling inexact alarm")
                 alarmManager.setAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
                     triggerAtMillis,
@@ -289,14 +334,22 @@ class EyeProtectionService : LifecycleService() {
                 )
             }
         } catch (securityException: SecurityException) {
+            Log.e(TAG, "Exact alarm denied by security policy; falling back to inexact", securityException)
             alarmManager.setAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 triggerAtMillis,
                 pendingIntent
             )
-        } catch (_: Exception) {
-            // Fail silently for MVP.
+        } catch (throwable: Throwable) {
+            Log.e(TAG, "Failed to schedule break alarm", throwable)
+            showErrorNotification(
+                getString(R.string.error_overlay_failed_title),
+                getString(R.string.error_overlay_failed)
+            )
+            return
         }
+
+        Log.d(TAG, "Break scheduled at ${java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.US).format(java.util.Date(triggerAtMillis))} (in ${delayMillis / 1000}s)")
     }
 
     private fun cancelAlarm() {
@@ -321,13 +374,24 @@ class EyeProtectionService : LifecycleService() {
 
     private fun showBreakOverlay(breakDurationSeconds: Int, isReminder: Boolean = false) {
         if (overlayView != null) {
+            Log.w(TAG, "Overlay already present; ignoring showBreakOverlay")
             return
         }
 
-        if (!Settings.canDrawOverlays(this)) {
-            stopProtection()
+        val canDraw = Settings.canDrawOverlays(this)
+        Log.d(TAG, "canDrawOverlays() = $canDraw")
+
+        if (!canDraw) {
+            Log.e(TAG, "Overlay failed: overlay permission not granted")
+            showErrorNotification(
+                getString(R.string.error_overlay_missing_permission_title),
+                getString(R.string.error_overlay_missing_permission)
+            )
+            rescheduleAfterFailure()
             return
         }
+
+        Log.d(TAG, "Showing break overlay ($breakDurationSeconds seconds)")
 
         acquireBreakWakeLock(breakDurationSeconds)
 
@@ -337,9 +401,10 @@ class EyeProtectionService : LifecycleService() {
         val composeView = ComposeView(this)
 
         composeView.setViewTreeLifecycleOwner(this)
+        composeView.setViewTreeSavedStateRegistryOwner(this)
 
         composeView.setViewCompositionStrategy(
-            ViewCompositionStrategy.DisposeOnLifecycleDestroyed(this)
+            ViewCompositionStrategy.DisposeOnDetachedFromWindow
         )
 
         composeView.setContent {
@@ -360,12 +425,45 @@ class EyeProtectionService : LifecycleService() {
 
         val layoutParams = createOverlayLayoutParams()
 
+        Log.d(
+            TAG,
+            "addView attempt: type=${layoutParams.type}, flags=0x${layoutParams.flags.toString(16)}, " +
+                "size=${layoutParams.width}x${layoutParams.height}, format=${layoutParams.format}, " +
+                "gravity=${layoutParams.gravity}"
+        )
+
         try {
             windowManager.addView(composeView, layoutParams)
             overlayView = composeView
+            Log.d(
+                TAG,
+                "addView SUCCEEDED: attached=${composeView.isAttachedToWindow}, " +
+                    "hasWindowToken=${composeView.windowToken != null}, " +
+                    "size=${composeView.width}x${composeView.height}, " +
+                    "visibility=${composeView.visibility}, alpha=${composeView.alpha}"
+            )
+
+            composeView.postDelayed({
+                Log.d(
+                    TAG,
+                    "Overlay after layout pass: size=${composeView.width}x${composeView.height}, " +
+                        "attached=${composeView.isAttachedToWindow}, " +
+                        "hasWindowToken=${composeView.windowToken != null}, " +
+                        "visibility=${composeView.visibility}, " +
+                        "alpha=${composeView.alpha}"
+                )
+            }, 300L)
         } catch (throwable: Throwable) {
+            Log.e(TAG, "Overlay failed: windowManager.addView threw", throwable)
             releaseWakeLock()
-            stopProtection()
+            showErrorNotification(
+                getString(R.string.error_overlay_failed_title),
+                getString(
+                    R.string.error_overlay_failed_detail,
+                    throwable.message ?: throwable.javaClass.simpleName
+                )
+            )
+            rescheduleAfterFailure()
             return
         }
 
@@ -379,6 +477,7 @@ class EyeProtectionService : LifecycleService() {
 
             finished.value = true
             enableOverlayTouches()
+            Log.d(TAG, "Break countdown finished; touches enabled")
         }
     }
 
@@ -427,6 +526,7 @@ class EyeProtectionService : LifecycleService() {
 
     private fun handleContinue() {
         hideOverlay()
+        Log.d(TAG, "Break finished; user continued")
 
         lifecycleScope.launch {
             val settings = repository.settings.first()
@@ -442,6 +542,36 @@ class EyeProtectionService : LifecycleService() {
     private fun handleRemindLater() {
         Log.d(TAG, "User selected remind later")
         scheduleReminderBreak()
+    }
+
+    private fun rescheduleAfterFailure() {
+        lifecycleScope.launch {
+            val settings = repository.settings.first()
+
+            if (settings.enabled) {
+                scheduleBreakAlarm(settings.workIntervalMinutes)
+            }
+        }
+    }
+
+    private fun showErrorNotification(title: String, text: String) {
+        try {
+            val notification = NotificationCompat.Builder(this, CHANNEL_INFO_ID)
+                .setSmallIcon(R.drawable.ic_eye)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .build()
+
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            notificationManager.notify(ERROR_NOTIFICATION_ID, notification)
+        } catch (throwable: Throwable) {
+            Log.e(TAG, "Failed to show error notification", throwable)
+        }
     }
 
     private fun hideOverlay() {
@@ -461,6 +591,7 @@ class EyeProtectionService : LifecycleService() {
     }
 
     private fun stopProtection() {
+        Log.d(TAG, "Stopping protection")
         cancelAlarm()
         hideOverlay()
 

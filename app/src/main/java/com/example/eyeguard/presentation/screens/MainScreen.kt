@@ -44,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,10 +53,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.eyeguard.BuildConfig
+import com.example.eyeguard.R
 import com.example.eyeguard.domain.models.EyeGuardSettings
 import com.example.eyeguard.presentation.EyeGuardViewModel
 import com.example.eyeguard.presentation.components.PermissionCard
 import com.example.eyeguard.service.startEyeProtection
+import com.example.eyeguard.service.startEyeProtectionTest
 import com.example.eyeguard.service.stopEyeProtection
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,6 +73,7 @@ fun MainScreen(
 
     var customWorkMinutes by remember { mutableStateOf("") }
     var customBreakSeconds by remember { mutableStateOf("") }
+    var debugTestIntervalSelected by remember { mutableStateOf(false) }
 
     val overlayGranted = remember {
         mutableStateOf(Settings.canDrawOverlays(context))
@@ -155,13 +160,13 @@ fun MainScreen(
             ) {
                 // Title
                 Text(
-                    text = "\uD83D\uDC41 \u0645\u0648\u0642\u0639\u06CC\u062A \u0686\u0634\u0645",
+                    text = stringResource(R.string.screen_title),
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 Text(
-                    text = "\u062E\u0627\u0633\u062A\u06AF\u0627\u0631\u06CC \u0631\u0627 \u0628\u0631\u0627\u06CC \u0637\u0648\u0644 \u0628\u0644\u0646\u062F\u06CC \u0686\u0634\u0645 \u062A\u0648\u0636\u062D \u0645\u06CC \u06A9\u0646\u062F.",
+                    text = stringResource(R.string.screen_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.fillMaxWidth()
@@ -170,9 +175,9 @@ fun MainScreen(
                 // Permission cards
                 if (!overlayGranted.value) {
                     PermissionCard(
-                        title = "\u0646\u0645\u0627\u06CC\u0634 \u0631\u0648\u06CC \u0627\u067E\u0644\u06CC\u06A9\u06CC\u0634\u0646\u0646\u06AF\u0627\u0646",
-                        description = "\u0628\u0631\u0627\u06CC \u0646\u0645\u0627\u06CC\u0634 \u0635\u0641\u062D\u0647 \u0633\u0646\u062C\u06CC \u0628\u0627\u0631 \u0627\u0633\u062A\u0641\u0627\u062F\u0647 \u0645\u06CC \u0634\u0648\u062F.",
-                        actionLabel = "\u0628\u0627\u0632 \u0628\u0631\u0646\u0627\u0645\u0647 \u0631\u0627 \u0628\u0627\u0632 \u06A9\u0646\u06CC\u062F",
+                        title = stringResource(R.string.permission_overlay_title),
+                        description = stringResource(R.string.permission_overlay_description),
+                        actionLabel = stringResource(R.string.permission_overlay_action),
                         onAction = {
                             runCatching {
                                 val intent = Intent(
@@ -187,9 +192,9 @@ fun MainScreen(
 
                 if (!notificationGranted.value) {
                     PermissionCard(
-                        title = "\u0646\u0648\u062A\u06CC\u0641\u06CC\u06A9\u06CC\u0634\u0646\u0646\u0647\u0627",
-                        description = "\u0627\u0646\u062F\u0631\u0648\u06CC\u062F \u0628\u0631\u0627\u06CC \u0633\u0631\u0648\u06CC\u0633 \u067E\u0634\u062A\u0628\u0627\u0646\u06CC \u0628\u0647 \u0646\u0648\u062A\u06CC\u0641\u06CC\u06A9\u0633\u06CC\u0648\u0646 \u0646\u06CC\u0627\u0632 \u062F\u0627\u0631\u062F.",
-                        actionLabel = "\u0627\u0639\u062A\u0645\u0627\u062F \u062F\u0633\u062A\u0631\u0633\u06CC \u0628\u0647 \u0646\u0648\u062A\u06CC\u0641\u06CC\u06A9\u06CC\u0634\u0646\u0646\u0647\u0627",
+                        title = stringResource(R.string.permission_notification_title),
+                        description = stringResource(R.string.permission_notification_description),
+                        actionLabel = stringResource(R.string.permission_notification_action),
                         onAction = {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                 requestNotificationLauncher.launch(
@@ -204,9 +209,9 @@ fun MainScreen(
 
                 if (!exactAlarmGranted.value) {
                     PermissionCard(
-                        title = "\u0632\u0645\u0627\u0646\u0628\u0646\u062F\u06CC \u062F\u0642\u06CC\u0642",
-                        description = "\u062F\u0642\u062A \u0631\u0633\u0627\u0646\u06CC \u062A\u063A\u06CC\u06CC\u0631 \u0645\u06CC \u06A9\u0646\u062F. \u0628\u062F\u0648\u0646 \u0622\u0646 \u0627\u0632 \u0622\u0646 \u0627\u0646\u062F\u0631\u0648\u06CC\u062F \u0627\u0646\u062F\u0631\u0648\u06CC\u062F \u0645\u0645\u06A9\u0646 \u0627\u0633\u062A \u0628\u0647 \u062A\u0623\u0648\u0646\u0631\u06CC \u0646\u0634\u0627\u0646\u062F.",
-                        actionLabel = "\u0627\u062C\u0627\u0632\u0647 \u062F\u0627\u0646\u0631\u0648\u062C\u0648\u062F\u0646 \u0632\u0645\u0627\u0646\u0628\u0646\u062F\u06CC \u062F\u0642\u06CC\u0642",
+                        title = stringResource(R.string.permission_exact_alarm_title),
+                        description = stringResource(R.string.permission_exact_alarm_description),
+                        actionLabel = stringResource(R.string.permission_exact_alarm_action),
                         optional = true,
                         onAction = {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -224,9 +229,9 @@ fun MainScreen(
 
                 if (!batteryOptimizationIgnored.value) {
                     PermissionCard(
-                        title = "\u0628\u0647\u06CC\u0646\u0647\u0631\u06CC \u0628\u0627\u062A\u0631\u06CC",
-                        description = "\u0628\u0631\u062E\u06CC \u062F\u0633\u062A\u06AF\u0627\u0647\u200C\u0647\u0627 \u0628\u0647 \u0635\u0648\u0631\u062A \u0628\u0646\u062F \u0628\u0627\u0631 \u0627\u067E\u0644\u06CC\u06A9\u06CC\u0634\u0646\u0646\u06AF\u0627\u0646 \u062E\u0648\u062F\u0631 \u0645\u06CC \u06A9\u0646\u0646\u062F.",
-                        actionLabel = "\u0628\u0627\u0632 \u0635\u0641\u062D\u0647 \u0628\u0647\u06CC\u0646\u0647\u0631\u06CC",
+                        title = stringResource(R.string.permission_battery_title),
+                        description = stringResource(R.string.permission_battery_description),
+                        actionLabel = stringResource(R.string.permission_battery_action),
                         optional = true,
                         onAction = {
                             runCatching {
@@ -250,7 +255,7 @@ fun MainScreen(
                     ) {
                         // Work interval
                         Text(
-                            text = "\u0641\u0627\u0635\u0644\u0647 \u06A9\u0627\u0631\u06CC",
+                            text = stringResource(R.string.work_interval_title),
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -266,12 +271,29 @@ fun MainScreen(
                                         customWorkMinutes = ""
                                     },
                                     label = {
-                                        Text("$minutes \u062F\u0642\u06CC\u0642\u0647")
+                                        Text(stringResource(R.string.chip_work_minutes, minutes))
                                     },
                                     enabled = !isRunning,
                                     colors = FilterChipDefaults.filterChipColors(
                                         selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
                                         selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                )
+                            }
+
+                            if (BuildConfig.DEBUG_TEST_INTERVAL) {
+                                FilterChip(
+                                    selected = debugTestIntervalSelected,
+                                    onClick = {
+                                        debugTestIntervalSelected = !debugTestIntervalSelected
+                                    },
+                                    label = {
+                                        Text(stringResource(R.string.debug_test_chip))
+                                    },
+                                    enabled = !isRunning,
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                        selectedLabelColor = MaterialTheme.colorScheme.onTertiaryContainer
                                     )
                                 )
                             }
@@ -290,10 +312,10 @@ fun MainScreen(
                                 }
                             },
                             label = {
-                                Text("\u0635\u0641\u062D\u0647 \u062F\u0644\u062E\u0648\u0627\u0647")
+                                Text(stringResource(R.string.field_custom_label))
                             },
                             suffix = {
-                                Text("\u062F\u0642\u06CC\u0642\u0647")
+                                Text(stringResource(R.string.unit_minutes))
                             },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
@@ -309,7 +331,7 @@ fun MainScreen(
 
                         // Break duration
                         Text(
-                            text = "\u0645\u062F\u062A \u0633\u062A\u0631\u0627\u062D\u062A",
+                            text = stringResource(R.string.break_duration_title),
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -325,7 +347,7 @@ fun MainScreen(
                                         customBreakSeconds = ""
                                     },
                                     label = {
-                                        Text("$seconds \u062A\u0646\u0648\u0647")
+                                        Text(stringResource(R.string.chip_break_seconds, seconds))
                                     },
                                     enabled = !isRunning,
                                     colors = FilterChipDefaults.filterChipColors(
@@ -349,10 +371,10 @@ fun MainScreen(
                                 }
                             },
                             label = {
-                                Text("\u0635\u0641\u062D\u0647 \u062F\u0644\u062E\u0648\u0627\u0647")
+                                Text(stringResource(R.string.field_custom_label))
                             },
                             suffix = {
-                                Text("\u062A\u0646\u0648\u0647")
+                                Text(stringResource(R.string.unit_seconds))
                             },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
@@ -377,7 +399,11 @@ fun MainScreen(
                         } else {
                             viewModel.setEnabled(true)
                             runCatching {
-                                context.startEyeProtection(uiState.settings)
+                                if (BuildConfig.DEBUG_TEST_INTERVAL && debugTestIntervalSelected) {
+                                    context.startEyeProtectionTest(uiState.settings)
+                                } else {
+                                    context.startEyeProtection(uiState.settings)
+                                }
                             }.onFailure {
                                 viewModel.setEnabled(false)
                             }
@@ -395,14 +421,18 @@ fun MainScreen(
                     )
                 ) {
                     Text(
-                        text = if (isRunning) "\u062A\u0648\u0642\u0641 \u0645\u0648\u0642\u0639\u06CC\u062A" else "\u0634\u0631\u0648\u0639 \u0645\u0648\u0642\u0639\u06CC\u062A",
+                        text = if (isRunning) {
+                            stringResource(R.string.stop_button)
+                        } else {
+                            stringResource(R.string.start_button)
+                        },
                         fontSize = 16.sp
                     )
                 }
 
                 if (!requiredPermissionsGranted && !isRunning) {
                     Text(
-                        text = "\u0628\u0631\u0627\u06CC \u0634\u0631\u0648\u0639 \u0645\u0648\u0642\u0639\u06CC\u062A \u0627\u0632 \u0645\u062C\u0648\u0632\u0632\u06CC \u062F\u0633\u062A\u0631\u0633\u06CC\u200C\u0647\u0627\u06CC \u0627\u0635\u0644\u06CC \u0627\u0633\u062A\u0641\u0627\u062F\u0647 \u06A9\u0646\u06CC\u062F.",
+                        text = stringResource(R.string.permission_warning),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.fillMaxWidth()

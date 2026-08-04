@@ -26,3 +26,23 @@ fun Context.stopEyeProtection() {
 
     ContextCompat.startForegroundService(this, intent)
 }
+
+/** Debug-only helper: schedules the first break after a short fixed interval (10s). */
+fun Context.startEyeProtectionTest(settings: EyeGuardSettings) {
+    val intent = Intent(this, EyeProtectionService::class.java)
+        .setAction(EyeProtectionService.ACTION_START)
+        .putExtra(
+            EyeProtectionService.EXTRA_WORK_MINUTES,
+            settings.workIntervalMinutes
+        )
+        .putExtra(
+            EyeProtectionService.EXTRA_BREAK_SECONDS,
+            settings.breakDurationSeconds
+        )
+        .putExtra(
+            EyeProtectionService.EXTRA_TEST_INTERVAL_SECONDS,
+            10
+        )
+
+    ContextCompat.startForegroundService(this, intent)
+}

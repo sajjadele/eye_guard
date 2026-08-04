@@ -1,11 +1,13 @@
 package com.example.eyeguard.service
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -14,15 +16,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.eyeguard.R
+
+private const val TAG = "EyeGuardOverlay"
 
 sealed class BreakAction {
     data object Continue : BreakAction()
@@ -36,6 +42,10 @@ fun BreakOverlayContent(
     onAction: (BreakAction) -> Unit,
     showRemindLater: Boolean = true
 ) {
+    LaunchedEffect(Unit) {
+        Log.d(TAG, "BreakOverlay composition launched")
+    }
+
     val blockingModifier = if (!finished) {
         Modifier.pointerInput(Unit) {
             detectTapGestures {
@@ -50,7 +60,13 @@ fun BreakOverlayContent(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF0F1114).copy(alpha = 0.97f))
-            .then(blockingModifier),
+            .then(blockingModifier)
+            .onGloballyPositioned { coordinates ->
+                Log.d(
+                    TAG,
+                    "BreakOverlay laid out: size=${coordinates.size.width}x${coordinates.size.height}"
+                )
+            },
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -66,7 +82,7 @@ fun BreakOverlayContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "\u0632\u0645\u0627\u0646 \u0627\u0633\u062A\u0631\u0627\u062D\u062A \u0686\u0634\u0645",
+                text = stringResource(R.string.break_header),
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.White,
                 textAlign = TextAlign.Center,
@@ -76,7 +92,7 @@ fun BreakOverlayContent(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "\u0628\u0647 \u0686\u0634\u0645\u062A\u0648\u0646 \u0637\u0648\u0644 \u0628\u062F\u0647\u06CC\u062F.",
+                text = stringResource(R.string.break_body),
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.White.copy(alpha = 0.8f),
                 textAlign = TextAlign.Center,
@@ -95,7 +111,7 @@ fun BreakOverlayContent(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "\u062A\u0646\u0648\u0647 \u0628\u0627\u0642\u06CC \u0645\u0627\u0646\u062F\u0647",
+                    text = stringResource(R.string.break_seconds_remaining),
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.White.copy(alpha = 0.8f),
                     modifier = Modifier.fillMaxWidth()
@@ -107,7 +123,7 @@ fun BreakOverlayContent(
                         .height(56.dp)
                         .widthIn(min = 220.dp)
                 ) {
-                    Text("\u0627\u062F\u0627\u0645\u0647 \u06A9\u0627\u0631", fontSize = 16.sp)
+                    Text(stringResource(R.string.break_continue), fontSize = 16.sp)
                 }
 
                 if (showRemindLater) {

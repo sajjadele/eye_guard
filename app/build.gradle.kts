@@ -14,9 +14,13 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+        buildConfigField("boolean", "DEBUG_TEST_INTERVAL", "false")
     }
 
     buildTypes {
+        debug {
+            buildConfigField("boolean", "DEBUG_TEST_INTERVAL", "true")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -37,6 +41,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

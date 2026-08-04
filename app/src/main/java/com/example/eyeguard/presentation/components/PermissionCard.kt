@@ -11,7 +11,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.eyeguard.R
 
 @Composable
 fun PermissionCard(
@@ -41,7 +43,7 @@ fun PermissionCard(
 
                 if (optional) {
                     Text(
-                        text = "\u0627\u0639\u0645\u0627\u0644\u06CC",
+                        text = stringResource(R.string.optional_badge),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.secondary
                     )

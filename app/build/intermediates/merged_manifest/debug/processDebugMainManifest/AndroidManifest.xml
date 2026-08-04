@@ -27,7 +27,7 @@
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:debuggable="true"
         android:extractNativeLibs="false"
-        android:label="EyeGuard"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.EyeGuard" >
         <activity
