@@ -194,13 +194,13 @@ class EyeProtectionService : LifecycleService() {
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_eye)
-            .setContentTitle("EyeGuard is active")
-            .setContentText("Break reminders are running")
+            .setContentTitle("\uD83D\uDC41 \u0645\u0648\u0642\u0639\u06CC\u062A \u0686\u0634\u0645 \u0641\u0639\u0627\u0644 \u0627\u0633\u062A")
+            .setContentText("\u0632\u0645\u0627\u0646\u0628\u0646\u062F\u06CC \u0633\u062A\u0631\u0627\u062D\u062A \u0627\u0635\u0644\u06CC \u0627\u0633\u062A")
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setContentIntent(contentIntent)
-            .addAction(0, "Stop", stopPendingIntent)
+            .addAction(0, "\u062A\u0648\u0642\u0641", stopPendingIntent)
             .build()
     }
 

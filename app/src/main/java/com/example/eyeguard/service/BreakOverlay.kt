@@ -40,7 +40,7 @@ fun BreakOverlayContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.95f))
+            .background(Color(0xFF0F1114).copy(alpha = 0.97f))
             .then(blockingModifier),
         contentAlignment = Alignment.Center
     ) {
@@ -49,7 +49,7 @@ fun BreakOverlayContent(
             modifier = Modifier.padding(32.dp)
         ) {
             Text(
-                text = "👁",
+                text = "\uD83D\uDC41",
                 fontSize = 56.sp,
                 color = Color.White
             )
@@ -57,19 +57,21 @@ fun BreakOverlayContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Eye Rest Time",
+                text = "\u0632\u0645\u0627\u0646 \u0627\u0633\u062A\u0631\u0627\u062D\u062A \u0686\u0634\u0645",
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.White,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Give your eyes a short break.",
+                text = "\u0628\u0647 \u0686\u0634\u0645\u062A\u0648\u0646 \u0637\u0648\u0644 \u0628\u062F\u0647\u06CC\u062F.",
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.White.copy(alpha = 0.8f),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -84,9 +86,10 @@ fun BreakOverlayContent(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "seconds remaining",
+                    text = "\u062A\u0646\u0648\u0647 \u0628\u0627\u0642\u06CC \u0645\u0627\u0646\u062F\u0647",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White.copy(alpha = 0.8f)
+                    color = Color.White.copy(alpha = 0.8f),
+                    modifier = Modifier.fillMaxWidth()
                 )
             } else {
                 Button(
@@ -95,7 +98,7 @@ fun BreakOverlayContent(
                         .height(56.dp)
                         .widthIn(min = 220.dp)
                 ) {
-                    Text("Continue Working")
+                    Text("\u0627\u062F\u0627\u0645\u0647 \u06A9\u0627\u0631", fontSize = 16.sp)
                 }
             }
         }

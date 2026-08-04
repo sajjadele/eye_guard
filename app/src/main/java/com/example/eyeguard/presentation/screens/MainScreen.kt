@@ -21,13 +21,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,10 +40,13 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -58,6 +66,9 @@ fun MainScreen(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    var customWorkMinutes by remember { mutableStateOf("") }
+    var customBreakSeconds by remember { mutableStateOf("") }
 
     val overlayGranted = remember {
         mutableStateOf(Settings.canDrawOverlays(context))
@@ -142,21 +153,26 @@ fun MainScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                // Title
                 Text(
-                    text = "Eye Protection",
-                    style = MaterialTheme.typography.headlineSmall
+                    text = "\uD83D\uDC41 \u0645\u0648\u0642\u0639\u06CC\u062A \u0686\u0634\u0645",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Text(
-                    text = "Reminds you to rest your eyes during long phone usage.",
-                    style = MaterialTheme.typography.bodyMedium
+                    text = "\u062E\u0627\u0633\u062A\u06AF\u0627\u0631\u06CC \u0631\u0627 \u0628\u0631\u0627\u06CC \u0637\u0648\u0644 \u0628\u0644\u0646\u062F\u06CC \u0686\u0634\u0645 \u062A\u0648\u0636\u062D \u0645\u06CC \u06A9\u0646\u062F.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.fillMaxWidth()
                 )
 
+                // Permission cards
                 if (!overlayGranted.value) {
                     PermissionCard(
-                        title = "Display over other apps",
-                        description = "EyeGuard needs this permission to show the full-screen break screen above the app you are currently using.",
-                        actionLabel = "Open overlay settings",
+                        title = "\u0646\u0645\u0627\u06CC\u0634 \u0631\u0648\u06CC \u0627\u067E\u0644\u06CC\u06A9\u06CC\u0634\u0646\u0646\u06AF\u0627\u0646",
+                        description = "\u0628\u0631\u0627\u06CC \u0646\u0645\u0627\u06CC\u0634 \u0635\u0641\u062D\u0647 \u0633\u0646\u062C\u06CC \u0628\u0627\u0631 \u0627\u0633\u062A\u0641\u0627\u062F\u0647 \u0645\u06CC \u0634\u0648\u062F.",
+                        actionLabel = "\u0628\u0627\u0632 \u0628\u0631\u0646\u0627\u0645\u0647 \u0631\u0627 \u0628\u0627\u0632 \u06A9\u0646\u06CC\u062F",
                         onAction = {
                             runCatching {
                                 val intent = Intent(
@@ -171,9 +187,9 @@ fun MainScreen(
 
                 if (!notificationGranted.value) {
                     PermissionCard(
-                        title = "Notifications",
-                        description = "Android requires a notification for the foreground service that keeps eye protection active.",
-                        actionLabel = "Grant notification access",
+                        title = "\u0646\u0648\u062A\u06CC\u0641\u06CC\u06A9\u06CC\u0634\u0646\u0646\u0647\u0627",
+                        description = "\u0627\u0646\u062F\u0631\u0648\u06CC\u062F \u0628\u0631\u0627\u06CC \u0633\u0631\u0648\u06CC\u0633 \u067E\u0634\u062A\u0628\u0627\u0646\u06CC \u0628\u0647 \u0646\u0648\u062A\u06CC\u0641\u06CC\u06A9\u0633\u06CC\u0648\u0646 \u0646\u06CC\u0627\u0632 \u062F\u0627\u0631\u062F.",
+                        actionLabel = "\u0627\u0639\u062A\u0645\u0627\u062F \u062F\u0633\u062A\u0631\u0633\u06CC \u0628\u0647 \u0646\u0648\u062A\u06CC\u0641\u06CC\u06A9\u06CC\u0634\u0646\u0646\u0647\u0627",
                         onAction = {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                 requestNotificationLauncher.launch(
@@ -188,9 +204,9 @@ fun MainScreen(
 
                 if (!exactAlarmGranted.value) {
                     PermissionCard(
-                        title = "Exact alarms",
-                        description = "Improves break timing accuracy. Without it, Android may delay the break slightly.",
-                        actionLabel = "Allow exact alarms",
+                        title = "\u0632\u0645\u0627\u0646\u0628\u0646\u062F\u06CC \u062F\u0642\u06CC\u0642",
+                        description = "\u062F\u0642\u062A \u0631\u0633\u0627\u0646\u06CC \u062A\u063A\u06CC\u06CC\u0631 \u0645\u06CC \u06A9\u0646\u062F. \u0628\u062F\u0648\u0646 \u0622\u0646 \u0627\u0632 \u0622\u0646 \u0627\u0646\u062F\u0631\u0648\u06CC\u062F \u0627\u0646\u062F\u0631\u0648\u06CC\u062F \u0645\u0645\u06A9\u0646 \u0627\u0633\u062A \u0628\u0647 \u062A\u0623\u0648\u0646\u0631\u06CC \u0646\u0634\u0627\u0646\u062F.",
+                        actionLabel = "\u0627\u062C\u0627\u0632\u0647 \u062F\u0627\u0646\u0631\u0648\u062C\u0648\u062F\u0646 \u0632\u0645\u0627\u0646\u0628\u0646\u062F\u06CC \u062F\u0642\u06CC\u0642",
                         optional = true,
                         onAction = {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -208,9 +224,9 @@ fun MainScreen(
 
                 if (!batteryOptimizationIgnored.value) {
                     PermissionCard(
-                        title = "Battery optimization",
-                        description = "Some devices aggressively kill background apps. For best results, disable battery optimization for EyeGuard.",
-                        actionLabel = "Open battery settings",
+                        title = "\u0628\u0647\u06CC\u0646\u0647\u0631\u06CC \u0628\u0627\u062A\u0631\u06CC",
+                        description = "\u0628\u0631\u062E\u06CC \u062F\u0633\u062A\u06AF\u0627\u0647\u200C\u0647\u0627 \u0628\u0647 \u0635\u0648\u0631\u062A \u0628\u0646\u062F \u0628\u0627\u0631 \u0627\u067E\u0644\u06CC\u06A9\u06CC\u0634\u0646\u0646\u06AF\u0627\u0646 \u062E\u0648\u062F\u0631 \u0645\u06CC \u06A9\u0646\u0646\u062F.",
+                        actionLabel = "\u0628\u0627\u0632 \u0635\u0641\u062D\u0647 \u0628\u0647\u06CC\u0646\u0647\u0631\u06CC",
                         optional = true,
                         onAction = {
                             runCatching {
@@ -222,16 +238,21 @@ fun MainScreen(
                     )
                 }
 
+                // Settings card
                 ElevatedCard(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
+                        // Work interval
                         Text(
-                            text = "Work interval",
-                            style = MaterialTheme.typography.titleMedium
+                            text = "\u0641\u0627\u0635\u0644\u0647 \u06A9\u0627\u0631\u06CC",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.fillMaxWidth()
                         )
 
                         Row(
@@ -242,20 +263,55 @@ fun MainScreen(
                                     selected = uiState.settings.workIntervalMinutes == minutes,
                                     onClick = {
                                         viewModel.setWorkInterval(minutes)
+                                        customWorkMinutes = ""
                                     },
                                     label = {
-                                        Text("$minutes min")
+                                        Text("$minutes \u062F\u0642\u06CC\u0642\u0647")
                                     },
-                                    enabled = !isRunning
+                                    enabled = !isRunning,
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
                                 )
                             }
                         }
 
+                        // Custom work interval
+                        OutlinedTextField(
+                            value = customWorkMinutes,
+                            onValueChange = { value ->
+                                if (value.all { it.isDigit() } && value.length <= 3) {
+                                    customWorkMinutes = value
+                                    val minutes = value.toIntOrNull()
+                                    if (minutes != null && minutes in 1..180) {
+                                        viewModel.setWorkInterval(minutes)
+                                    }
+                                }
+                            },
+                            label = {
+                                Text("\u0635\u0641\u062D\u0647 \u062F\u0644\u062E\u0648\u0627\u0647")
+                            },
+                            suffix = {
+                                Text("\u062F\u0642\u06CC\u0642\u0647")
+                            },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            singleLine = true,
+                            enabled = !isRunning,
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                            )
+                        )
+
                         Spacer(modifier = Modifier.height(4.dp))
 
+                        // Break duration
                         Text(
-                            text = "Break duration",
-                            style = MaterialTheme.typography.titleMedium
+                            text = "\u0645\u062F\u062A \u0633\u062A\u0631\u0627\u062D\u062A",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.fillMaxWidth()
                         )
 
                         Row(
@@ -266,17 +322,51 @@ fun MainScreen(
                                     selected = uiState.settings.breakDurationSeconds == seconds,
                                     onClick = {
                                         viewModel.setBreakDuration(seconds)
+                                        customBreakSeconds = ""
                                     },
                                     label = {
-                                        Text("${seconds}s")
+                                        Text("$seconds \u062A\u0646\u0648\u0647")
                                     },
-                                    enabled = !isRunning
+                                    enabled = !isRunning,
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
                                 )
                             }
                         }
+
+                        // Custom break duration
+                        OutlinedTextField(
+                            value = customBreakSeconds,
+                            onValueChange = { value ->
+                                if (value.all { it.isDigit() } && value.length <= 3) {
+                                    customBreakSeconds = value
+                                    val seconds = value.toIntOrNull()
+                                    if (seconds != null && seconds in 5..300) {
+                                        viewModel.setBreakDuration(seconds)
+                                    }
+                                }
+                            },
+                            label = {
+                                Text("\u0635\u0641\u062D\u0647 \u062F\u0644\u062E\u0648\u0627\u0647")
+                            },
+                            suffix = {
+                                Text("\u062A\u0646\u0648\u0647")
+                            },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            singleLine = true,
+                            enabled = !isRunning,
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                            )
+                        )
                     }
                 }
 
+                // Start/Stop button
                 Button(
                     onClick = {
                         if (isRunning) {
@@ -296,18 +386,26 @@ fun MainScreen(
                     enabled = isRunning || requiredPermissionsGranted,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp)
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isRunning)
+                            MaterialTheme.colorScheme.error
+                        else
+                            MaterialTheme.colorScheme.primary
+                    )
                 ) {
                     Text(
-                        text = if (isRunning) "Stop Protection" else "Start Protection"
+                        text = if (isRunning) "\u062A\u0648\u0642\u0641 \u0645\u0648\u0642\u0639\u06CC\u062A" else "\u0634\u0631\u0648\u0639 \u0645\u0648\u0642\u0639\u06CC\u062A",
+                        fontSize = 16.sp
                     )
                 }
 
                 if (!requiredPermissionsGranted && !isRunning) {
                     Text(
-                        text = "Grant overlay and notification permissions before starting protection.",
+                        text = "\u0628\u0631\u0627\u06CC \u0634\u0631\u0648\u0639 \u0645\u0648\u0642\u0639\u06CC\u062A \u0627\u0632 \u0645\u062C\u0648\u0632\u0632\u06CC \u062F\u0633\u062A\u0631\u0633\u06CC\u200C\u0647\u0627\u06CC \u0627\u0635\u0644\u06CC \u0627\u0633\u062A\u0641\u0627\u062F\u0647 \u06A9\u0646\u06CC\u062F.",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
