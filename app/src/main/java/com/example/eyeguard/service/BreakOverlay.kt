@@ -11,21 +11,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.eyeguard.R
+
+sealed class BreakAction {
+    data object Continue : BreakAction()
+    data object RemindLater : BreakAction()
+}
 
 @Composable
 fun BreakOverlayContent(
     remainingSeconds: Int,
     finished: Boolean,
-    onContinue: () -> Unit
+    onAction: (BreakAction) -> Unit,
+    showRemindLater: Boolean = true
 ) {
     val blockingModifier = if (!finished) {
         Modifier.pointerInput(Unit) {
@@ -93,12 +102,28 @@ fun BreakOverlayContent(
                 )
             } else {
                 Button(
-                    onClick = onContinue,
+                    onClick = { onAction(BreakAction.Continue) },
                     modifier = Modifier
                         .height(56.dp)
                         .widthIn(min = 220.dp)
                 ) {
                     Text("\u0627\u062F\u0627\u0645\u0647 \u06A9\u0627\u0631", fontSize = 16.sp)
+                }
+
+                if (showRemindLater) {
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    OutlinedButton(
+                        onClick = { onAction(BreakAction.RemindLater) },
+                        modifier = Modifier
+                            .height(56.dp)
+                            .widthIn(min = 220.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.remind_later),
+                            fontSize = 16.sp
+                        )
+                    }
                 }
             }
         }

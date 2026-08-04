@@ -12,6 +12,7 @@ import android.graphics.PixelFormat
 import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
+import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import androidx.compose.runtime.collectAsState
@@ -39,13 +40,17 @@ class EyeProtectionService : LifecycleService() {
         const val ACTION_START = "ACTION_START"
         const val ACTION_STOP = "ACTION_STOP"
         const val ACTION_SHOW_BREAK = "ACTION_SHOW_BREAK"
+        const val ACTION_SHOW_REMINDER_BREAK = "ACTION_SHOW_REMINDER_BREAK"
         const val ACTION_CONTINUE = "ACTION_CONTINUE"
 
         const val EXTRA_WORK_MINUTES = "EXTRA_WORK_MINUTES"
         const val EXTRA_BREAK_SECONDS = "EXTRA_BREAK_SECONDS"
 
+        private const val TAG = "EyeProtectionService"
         private const val NOTIFICATION_ID = 1
         private const val CHANNEL_ID = "eye_guard_channel"
+        private const val REMINDER_DELAY_MINUTES = 5
+        private const val REQUEST_CODE_REMINDER = 2
     }
 
     private val repository = EyeGuardContainer.settingsRepository
@@ -113,6 +118,21 @@ class EyeProtectionService : LifecycleService() {
 
                     if (settings.enabled) {
                         showBreakOverlay(settings.breakDurationSeconds)
+                    } else {
+                        stopProtection()
+                    }
+                }
+            }
+
+            ACTION_SHOW_REMINDER_BREAK -> {
+                Log.d(TAG, "Reminder break alarm fired")
+
+                lifecycleScope.launch {
+                    val settings = repository.settings.first()
+
+                    if (settings.enabled) {
+                        Log.d(TAG, "Showing reminder break overlay")
+                        showBreakOverlay(settings.breakDurationSeconds, isReminder = true)
                     } else {
                         stopProtection()
                     }
@@ -227,12 +247,27 @@ class EyeProtectionService : LifecycleService() {
         val triggerAtMillis = System.currentTimeMillis() +
             TimeUnit.MINUTES.toMillis(workIntervalMinutes.toLong())
 
+        scheduleAlarm(ACTION_SHOW_BREAK, 0, triggerAtMillis)
+    }
+
+    private fun scheduleReminderBreak() {
+        Log.d(TAG, "Reminder break scheduled in 5 minutes")
+
+        hideOverlay()
+
+        val triggerAtMillis = System.currentTimeMillis() +
+            TimeUnit.MINUTES.toMillis(REMINDER_DELAY_MINUTES.toLong())
+
+        scheduleAlarm(ACTION_SHOW_REMINDER_BREAK, REQUEST_CODE_REMINDER, triggerAtMillis)
+    }
+
+    private fun scheduleAlarm(action: String, requestCode: Int, triggerAtMillis: Long) {
         val intent = Intent(this, EyeProtectionService::class.java)
-            .setAction(ACTION_SHOW_BREAK)
+            .setAction(action)
 
         val pendingIntent = PendingIntent.getForegroundService(
             this,
-            0,
+            requestCode,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -265,12 +300,17 @@ class EyeProtectionService : LifecycleService() {
     }
 
     private fun cancelAlarm() {
+        cancelPendingAlarm(ACTION_SHOW_BREAK, 0)
+        cancelPendingAlarm(ACTION_SHOW_REMINDER_BREAK, REQUEST_CODE_REMINDER)
+    }
+
+    private fun cancelPendingAlarm(action: String, requestCode: Int) {
         val intent = Intent(this, EyeProtectionService::class.java)
-            .setAction(ACTION_SHOW_BREAK)
+            .setAction(action)
 
         val pendingIntent = PendingIntent.getForegroundService(
             this,
-            0,
+            requestCode,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -279,7 +319,7 @@ class EyeProtectionService : LifecycleService() {
         pendingIntent.cancel()
     }
 
-    private fun showBreakOverlay(breakDurationSeconds: Int) {
+    private fun showBreakOverlay(breakDurationSeconds: Int, isReminder: Boolean = false) {
         if (overlayView != null) {
             return
         }
@@ -307,9 +347,13 @@ class EyeProtectionService : LifecycleService() {
                 BreakOverlayContent(
                     remainingSeconds = remainingSeconds.collectAsState().value,
                     finished = finished.collectAsState().value,
-                    onContinue = {
-                        handleContinue()
-                    }
+                    onAction = { action ->
+                        when (action) {
+                            BreakAction.Continue -> handleContinue()
+                            BreakAction.RemindLater -> handleRemindLater()
+                        }
+                    },
+                    showRemindLater = !isReminder
                 )
             }
         }
@@ -393,6 +437,11 @@ class EyeProtectionService : LifecycleService() {
                 stopProtection()
             }
         }
+    }
+
+    private fun handleRemindLater() {
+        Log.d(TAG, "User selected remind later")
+        scheduleReminderBreak()
     }
 
     private fun hideOverlay() {
