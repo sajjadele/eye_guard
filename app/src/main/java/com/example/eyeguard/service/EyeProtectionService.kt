@@ -505,9 +505,19 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
 
     private suspend fun playBreakEndSound() {
         try {
-            val toneGenerator = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 80)
-            toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP, 300)
-            delay(400)
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            Log.d(
+                TAG,
+                "Break end sound: ringerMode=${audioManager.ringerMode}, " +
+                    "musicVolume=${audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)}, " +
+                    "notificationVolume=${audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION)}"
+            )
+
+            val toneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
+            val started = toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP, 400)
+            Log.d(TAG, "Break end tone startTone result: $started")
+
+            delay(500)
             toneGenerator.release()
             Log.d(TAG, "Break end tone played")
         } catch (throwable: Throwable) {
