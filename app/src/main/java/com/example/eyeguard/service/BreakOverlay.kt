@@ -2,7 +2,6 @@ package com.example.eyeguard.service
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +19,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -46,21 +44,10 @@ fun BreakOverlayContent(
         Log.d(TAG, "BreakOverlay composition launched")
     }
 
-    val blockingModifier = if (!finished) {
-        Modifier.pointerInput(Unit) {
-            detectTapGestures {
-                // Consume touches during countdown.
-            }
-        }
-    } else {
-        Modifier
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF0F1114).copy(alpha = 0.97f))
-            .then(blockingModifier)
             .onGloballyPositioned { coordinates ->
                 Log.d(
                     TAG,
@@ -125,21 +112,21 @@ fun BreakOverlayContent(
                 ) {
                     Text(stringResource(R.string.break_continue), fontSize = 16.sp)
                 }
+            }
 
-                if (showRemindLater) {
-                    Spacer(modifier = Modifier.height(12.dp))
+            if (showRemindLater) {
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    OutlinedButton(
-                        onClick = { onAction(BreakAction.RemindLater) },
-                        modifier = Modifier
-                            .height(56.dp)
-                            .widthIn(min = 220.dp)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.remind_later),
-                            fontSize = 16.sp
-                        )
-                    }
+                OutlinedButton(
+                    onClick = { onAction(BreakAction.RemindLater) },
+                    modifier = Modifier
+                        .height(56.dp)
+                        .widthIn(min = 220.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.remind_later),
+                        fontSize = 16.sp
+                    )
                 }
             }
         }
