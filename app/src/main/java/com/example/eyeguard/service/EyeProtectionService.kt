@@ -9,8 +9,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.graphics.PixelFormat
+import android.media.AudioManager
+import android.media.ToneGenerator
 import android.os.Build
 import android.os.PowerManager
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
@@ -30,6 +34,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.example.eyeguard.EyeGuardContainer
 import com.example.eyeguard.R
+import com.example.eyeguard.domain.models.BreakEndAlertType
 import com.example.eyeguard.presentation.MainActivity
 import com.example.eyeguard.presentation.theme.EyeGuardTheme
 import kotlinx.coroutines.Job
@@ -480,6 +485,50 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
             finished.value = true
             enableOverlayTouches()
             Log.d(TAG, "Break countdown finished; touches enabled")
+
+            val settings = repository.settings.first()
+            triggerBreakEndAlert(settings.breakEndAlertType)
+        }
+    }
+
+    private suspend fun triggerBreakEndAlert(type: BreakEndAlertType) {
+        when (type) {
+            BreakEndAlertType.NONE -> return
+            BreakEndAlertType.SOUND -> playBreakEndSound()
+            BreakEndAlertType.VIBRATION -> vibrateShort()
+            BreakEndAlertType.BOTH -> {
+                playBreakEndSound()
+                vibrateShort()
+            }
+        }
+    }
+
+    private suspend fun playBreakEndSound() {
+        try {
+            val toneGenerator = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 80)
+            toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP, 300)
+            delay(400)
+            toneGenerator.release()
+            Log.d(TAG, "Break end tone played")
+        } catch (throwable: Throwable) {
+            Log.e(TAG, "Failed to play break-end sound", throwable)
+        }
+    }
+
+    private fun vibrateShort() {
+        try {
+            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(
+                    VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE)
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                vibrator.vibrate(200)
+            }
+            Log.d(TAG, "Break end vibration triggered")
+        } catch (throwable: Throwable) {
+            Log.e(TAG, "Failed to vibrate", throwable)
         }
     }
 

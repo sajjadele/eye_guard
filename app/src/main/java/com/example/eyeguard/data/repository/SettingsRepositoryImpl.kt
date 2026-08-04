@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.example.eyeguard.data.preferences.PrefsKeys
+import com.example.eyeguard.domain.models.BreakEndAlertType
 import com.example.eyeguard.domain.models.EyeGuardSettings
 import com.example.eyeguard.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +23,12 @@ class SettingsRepositoryImpl(
                     workIntervalMinutes = prefs[PrefsKeys.WORK_INTERVAL_MINUTES]
                         ?: EyeGuardSettings.DEFAULT_WORK_MINUTES,
                     breakDurationSeconds = prefs[PrefsKeys.BREAK_DURATION_SECONDS]
-                        ?: EyeGuardSettings.DEFAULT_BREAK_SECONDS
+                        ?: EyeGuardSettings.DEFAULT_BREAK_SECONDS,
+                    breakEndAlertType = prefs[PrefsKeys.BREAK_END_ALERT]
+                        ?.let { name ->
+                            runCatching { BreakEndAlertType.valueOf(name) }.getOrNull()
+                        }
+                        ?: EyeGuardSettings.DEFAULT_BREAK_END_ALERT
                 )
             }
             .catch {
@@ -36,7 +42,12 @@ class SettingsRepositoryImpl(
                 workIntervalMinutes = prefs[PrefsKeys.WORK_INTERVAL_MINUTES]
                     ?: EyeGuardSettings.DEFAULT_WORK_MINUTES,
                 breakDurationSeconds = prefs[PrefsKeys.BREAK_DURATION_SECONDS]
-                    ?: EyeGuardSettings.DEFAULT_BREAK_SECONDS
+                    ?: EyeGuardSettings.DEFAULT_BREAK_SECONDS,
+                breakEndAlertType = prefs[PrefsKeys.BREAK_END_ALERT]
+                    ?.let { name ->
+                        runCatching { BreakEndAlertType.valueOf(name) }.getOrNull()
+                    }
+                    ?: EyeGuardSettings.DEFAULT_BREAK_END_ALERT
             )
 
             val updated = transform(current).let {
@@ -49,6 +60,7 @@ class SettingsRepositoryImpl(
             prefs[PrefsKeys.ENABLED] = updated.enabled
             prefs[PrefsKeys.WORK_INTERVAL_MINUTES] = updated.workIntervalMinutes
             prefs[PrefsKeys.BREAK_DURATION_SECONDS] = updated.breakDurationSeconds
+            prefs[PrefsKeys.BREAK_END_ALERT] = updated.breakEndAlertType.name
         }
     }
 }

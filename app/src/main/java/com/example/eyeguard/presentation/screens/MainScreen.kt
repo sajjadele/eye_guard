@@ -55,6 +55,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.eyeguard.BuildConfig
 import com.example.eyeguard.R
+import com.example.eyeguard.domain.models.BreakEndAlertType
 import com.example.eyeguard.domain.models.EyeGuardSettings
 import com.example.eyeguard.presentation.EyeGuardViewModel
 import com.example.eyeguard.presentation.components.PermissionCard
@@ -385,6 +386,36 @@ fun MainScreen(
                                 unfocusedBorderColor = MaterialTheme.colorScheme.outline
                             )
                         )
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        // Break end alert
+                        Text(
+                            text = stringResource(R.string.break_end_alert_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            BreakEndAlertType.entries.forEach { type ->
+                                FilterChip(
+                                    selected = uiState.settings.breakEndAlertType == type,
+                                    onClick = {
+                                        viewModel.setBreakEndAlertType(type)
+                                    },
+                                    label = {
+                                        Text(breakEndAlertLabel(type))
+                                    },
+                                    enabled = !isRunning,
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -440,6 +471,16 @@ fun MainScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun breakEndAlertLabel(type: BreakEndAlertType): String {
+    return when (type) {
+        BreakEndAlertType.SOUND -> stringResource(R.string.alert_sound)
+        BreakEndAlertType.VIBRATION -> stringResource(R.string.alert_vibration)
+        BreakEndAlertType.BOTH -> stringResource(R.string.alert_sound_vibration)
+        BreakEndAlertType.NONE -> stringResource(R.string.alert_off)
     }
 }
 

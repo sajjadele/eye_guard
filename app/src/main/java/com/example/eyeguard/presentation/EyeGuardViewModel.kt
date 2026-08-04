@@ -3,6 +3,7 @@ package com.example.eyeguard.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.eyeguard.domain.models.BreakEndAlertType
 import com.example.eyeguard.domain.models.EyeGuardSettings
 import com.example.eyeguard.domain.repository.SettingsRepository
 import com.example.eyeguard.domain.usecases.ObserveSettingsUseCase
@@ -44,6 +45,10 @@ class EyeGuardViewModel(
 
     fun setBreakDuration(seconds: Int) {
         update { it.copy(breakDurationSeconds = seconds) }
+    }
+
+    fun setBreakEndAlertType(type: BreakEndAlertType) {
+        update { it.copy(breakEndAlertType = type) }
     }
 
     fun setEnabled(enabled: Boolean) {
