@@ -11,6 +11,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // مخزن میرور پشتیبان در صورت بلاک بودن Maven Central
+        maven { url = uri("https://repo1.maven.org/maven2/") }
     }
 }
 
