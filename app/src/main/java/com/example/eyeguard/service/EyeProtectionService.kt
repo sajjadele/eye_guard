@@ -5,12 +5,12 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.PowerManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.graphics.PixelFormat
 import android.os.Build
+import android.os.PowerManager
 import android.provider.Settings
 import android.view.Gravity
 import android.view.WindowManager
@@ -20,7 +20,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.ViewTreeLifecycleOwner
+import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.example.eyeguard.EyeGuardContainer
 import com.example.eyeguard.R
@@ -296,7 +296,7 @@ class EyeProtectionService : LifecycleService() {
 
         val composeView = ComposeView(this)
 
-        ViewTreeLifecycleOwner.set(composeView, this)
+        composeView.setViewTreeLifecycleOwner(this)
 
         composeView.setViewCompositionStrategy(
             ViewCompositionStrategy.DisposeOnLifecycleDestroyed(this)

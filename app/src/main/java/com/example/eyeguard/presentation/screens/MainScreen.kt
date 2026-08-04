@@ -2,8 +2,8 @@ package com.example.eyeguard.presentation.screens
 
 import android.Manifest
 import android.app.AlarmManager
-import android.app.PowerManager
 import android.content.Context
+import android.os.PowerManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
