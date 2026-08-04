@@ -69,6 +69,18 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
     private val repository = EyeGuardContainer.settingsRepository
     private val statsRepository = EyeGuardContainer.statsRepository
 
+    private val windowManager by lazy {
+        getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    }
+
+    private val alarmManager by lazy {
+        getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    }
+
+    private val powerManager by lazy {
+        getSystemService(Context.POWER_SERVICE) as PowerManager
+    }
+
     private var overlayView: ComposeView? = null
     private var breakJob: Job? = null
     private var breakWakeLock: PowerManager.WakeLock? = null
