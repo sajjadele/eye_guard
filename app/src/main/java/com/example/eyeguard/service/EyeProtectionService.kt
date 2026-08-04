@@ -316,6 +316,8 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        val delayMillis = triggerAtMillis - System.currentTimeMillis()
+
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
                 !alarmManager.canScheduleExactAlarms()
