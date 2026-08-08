@@ -68,6 +68,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
 
     private val repository = EyeGuardContainer.settingsRepository
     private val statsRepository = EyeGuardContainer.statsRepository
+    private val contentRepository = EyeGuardContainer.contentRepository
 
     private val windowManager by lazy {
         getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -408,6 +409,8 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
 
         val remainingSeconds = MutableStateFlow(breakDurationSeconds)
         val finished = MutableStateFlow(false)
+        val contentCards = MutableStateFlow<List<com.example.eyeguard.domain.model.ContentCard>>(emptyList())
+        val savedCardIds = MutableStateFlow<Set<Long>>(emptySet())
 
         val composeView = ComposeView(this)
 
@@ -422,14 +425,30 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
             EyeGuardTheme {
                 BreakOverlayContent(
                     remainingSeconds = remainingSeconds.collectAsState().value,
+                    totalBreakDuration = breakDurationSeconds,
                     finished = finished.collectAsState().value,
                     onAction = { action ->
                         when (action) {
                             BreakAction.Continue -> handleContinue()
                             BreakAction.RemindLater -> handleRemindLater()
+                            is BreakAction.SaveCard -> {
+                                lifecycleScope.launch {
+                                    val newSavedState = !action.card.isSaved
+                                    contentRepository.updateSavedStatus(action.card.id, newSavedState)
+                                    val currentIds = savedCardIds.value.toMutableSet()
+                                    if (newSavedState) {
+                                        currentIds.add(action.card.id)
+                                    } else {
+                                        currentIds.remove(action.card.id)
+                                    }
+                                    savedCardIds.value = currentIds
+                                }
+                            }
                         }
                     },
-                    showRemindLater = !isReminder
+                    showRemindLater = !isReminder,
+                    contentCards = contentCards.collectAsState().value,
+                    savedCardIds = savedCardIds.collectAsState().value
                 )
             }
         }
@@ -482,6 +501,19 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
 
         breakJob = lifecycleScope.launch {
             currentBreakEventId = statsRepository.recordBreakStarted(breakDurationSeconds)
+
+            // Fetch content cards for the break
+            try {
+                val settings = repository.settings.first()
+                val cards = contentRepository.getCardsForBreak(breakDurationSeconds, true)
+                contentCards.value = cards
+
+                // Fetch saved card IDs
+                val savedCards = contentRepository.getSavedCardsList()
+                savedCardIds.value = savedCards.map { it.id }.toSet()
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load content cards", e)
+            }
 
             for (second in breakDurationSeconds downTo 1) {
                 remainingSeconds.value = second

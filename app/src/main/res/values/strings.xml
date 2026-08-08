@@ -51,7 +51,7 @@
     <string name="permission_warning">برای شروع محافظت، دسترسی‌های اصلی را مجاز کنید.</string>
 
     <string name="break_header">زمان استراحت چشم</string>
-    <string name="break_body">به چشمانتان استراحت دهید.</string>
+    <string name="break_body">چشمانت را ببند</string>
     <string name="break_seconds_remaining">ثانیه باقی مانده</string>
     <string name="break_continue">ادامه کار</string>
     <string name="remind_later">Remind me in 5 minutes</string>
@@ -69,4 +69,29 @@
     <string name="error_notification_channel_text">شروع محافظت ممکن نبود.</string>
 
     <string name="debug_test_chip">تست سریع — ۱۰ ثانیه</string>
+
+    <!-- Hero Section -->
+    <string name="hero_title">محافظت چشم</string>
+    <string name="hero_subtitle">چشمانت در طول کار مراقبت می‌شوند</string>
+    <string name="status_active">فعال است</string>
+    <string name="status_inactive">متوقف</string>
+
+    <!-- Stats Card -->
+    <string name="stat_protection_time">زمان محافظت</string>
+    <string name="stat_breaks_done">استراحت انجام شده</string>
+    <string name="stat_break_time">زمان استراحت</string>
+
+    <!-- Control Card -->
+    <string name="control_config_summary">هر %1$d دقیقه — %2$d ثانیه استراحت</string>
+
+    <!-- Learning Content -->
+    <string name="learning_content_title">محتوای یادگیری</string>
+    <string name="vocabulary_english">واژه انگلیسی</string>
+    <string name="learned_cards_title">یادگرفته‌ها</string>
+    <string name="learned_cards_count">%1$d کارت ذخیره شده</string>
+    <string name="learned_cards_description">مشاهده کارت‌های ذخیره شده</string>
+    <string name="eye_care_tip">نکته سلامت چشم</string>
+    <string name="english_vocabulary">واژه انگلیسی</string>
+    <string name="saved">ذخیره شده</string>
+    <string name="save">ذخیره</string>
 </resources>

@@ -6,67 +6,65 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 
-// Vision Planner style dark theme — neumorphic, calm
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFF8AB4F8),
-    onPrimary = Color(0xFF003060),
-    primaryContainer = Color(0xFF1A3A5C),
-    onPrimaryContainer = Color(0xFFD3E3FD),
+    primary = BluePrimary,
+    onPrimary = BlueOnPrimary,
+    primaryContainer = BluePrimaryContainer,
+    onPrimaryContainer = BlueOnPrimaryContainer,
 
-    secondary = Color(0xFF81C995),
-    onSecondary = Color(0xFF00391A),
-    secondaryContainer = Color(0xFF1B3A2A),
-    onSecondaryContainer = Color(0xFFC4EED4),
+    secondary = GreenSecondary,
+    onSecondary = GreenOnSecondary,
+    secondaryContainer = GreenSecondaryContainer,
+    onSecondaryContainer = GreenOnSecondaryContainer,
 
-    tertiary = Color(0xFFD7BCFF),
-    onTertiary = Color(0xFF381E72),
-    tertiaryContainer = Color(0xFF2D2250),
-    onTertiaryContainer = Color(0xFFE9DDFF),
+    tertiary = PurpleTertiary,
+    onTertiary = PurpleOnTertiary,
+    tertiaryContainer = PurpleTertiaryContainer,
+    onTertiaryContainer = PurpleOnTertiaryContainer,
 
-    error = Color(0xFFFFB4AB),
-    onError = Color(0xFF690005),
-    errorContainer = Color(0xFF93000A),
-    onErrorContainer = Color(0xFFFFDAD6),
+    error = ErrorRed,
+    onError = ErrorOnRed,
+    errorContainer = ErrorRedContainer,
+    onErrorContainer = ErrorOnRedContainer,
 
-    background = Color(0xFF0F1114),
-    onBackground = Color(0xFFE2E2E6),
+    background = DarkBg,
+    onBackground = DarkOnBg,
 
-    surface = Color(0xFF1A1C20),
-    onSurface = Color(0xFFE2E2E6),
-    surfaceVariant = Color(0xFF252830),
-    onSurfaceVariant = Color(0xFFC3C6CF),
+    surface = DarkSurface,
+    onSurface = DarkOnSurface,
+    surfaceVariant = DarkSurfaceVariant,
+    onSurfaceVariant = DarkOnSurfaceVariant,
 
-    outline = Color(0xFF8D9199),
-    outlineVariant = Color(0xFF44474F),
+    outline = DarkOutline,
+    outlineVariant = DarkOutlineVariant,
 
-    surfaceTint = Color(0xFF8AB4F8)
+    surfaceTint = BluePrimary
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF1A73E8),
-    onPrimary = Color.White,
-    primaryContainer = Color(0xFFD3E3FD),
-    onPrimaryContainer = Color(0xFF003060),
+    primary = LightPrimary,
+    onPrimary = LightOnPrimary,
+    primaryContainer = LightPrimaryContainer,
+    onPrimaryContainer = LightOnPrimaryContainer,
 
-    secondary = Color(0xFF188038),
-    onSecondary = Color.White,
-    secondaryContainer = Color(0xFFC4EED4),
-    onSecondaryContainer = Color(0xFF00391A),
+    secondary = LightSecondary,
+    onSecondary = LightOnSecondary,
+    secondaryContainer = LightSecondaryContainer,
+    onSecondaryContainer = LightOnSecondaryContainer,
 
-    background = Color(0xFFFDFCFF),
-    onBackground = Color(0xFF1A1C1E),
+    background = LightBg,
+    onBackground = LightOnBg,
 
-    surface = Color(0xFFFDFCFF),
-    onSurface = Color(0xFF1A1C1E),
-    surfaceVariant = Color(0xFFDFE2EB),
-    onSurfaceVariant = Color(0xFF43474E),
+    surface = LightSurface,
+    onSurface = LightOnSurface,
+    surfaceVariant = LightSurfaceVariant,
+    onSurfaceVariant = LightOnSurfaceVariant,
 
-    outline = Color(0xFF73777F),
-    outlineVariant = Color(0xFFC3C6CF)
+    outline = LightOutline,
+    outlineVariant = LightOutlineVariant
 )
 
 @Composable
@@ -77,6 +75,8 @@ fun EyeGuardTheme(
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         MaterialTheme(
             colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
+            typography = EyeGuardTypography,
+            shapes = EyeGuardShapes,
             content = content
         )
     }

@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [BreakEvent::class, ProtectionSession::class],
-    version = 1,
+    entities = [BreakEvent::class, ProtectionSession::class, ContentCardEntity::class],
+    version = 2,
     exportSchema = false
 )
 abstract class EyeGuardDatabase : RoomDatabase() {
@@ -15,6 +15,8 @@ abstract class EyeGuardDatabase : RoomDatabase() {
     abstract fun breakEventDao(): BreakEventDao
 
     abstract fun protectionSessionDao(): ProtectionSessionDao
+
+    abstract fun contentDao(): ContentDao
 
     companion object {
         @Volatile
@@ -26,7 +28,7 @@ abstract class EyeGuardDatabase : RoomDatabase() {
                     context.applicationContext,
                     EyeGuardDatabase::class.java,
                     "eye_guard.db"
-                ).build().also { instance = it }
+                ).fallbackToDestructiveMigration().build().also { instance = it }
             }
         }
     }

@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="alert_off">خاموش</string>
+    <string name="alert_sound">صدا</string>
+    <string name="alert_sound_vibration">صدا و لرزش</string>
+    <string name="alert_vibration">لرزش</string>
     <string name="app_name">محافظ چشم</string>
     <string name="break_body">به چشمانتان استراحت دهید.</string>
     <string name="break_continue">ادامه کار</string>
     <string name="break_duration_title">مدت استراحت</string>
+    <string name="break_end_alert_title">هشدار پایان استراحت</string>
     <string name="break_header">زمان استراحت چشم</string>
     <string name="break_seconds_remaining">ثانیه باقی مانده</string>
     <string name="chip_break_seconds">%1$d ثانیه</string>
     <string name="chip_work_minutes">%1$d دقیقه</string>
+    <string name="control_config_summary">هر %1$d دقیقه — %2$d ثانیه استراحت</string>
     <string name="debug_test_chip">تست سریع — ۱۰ ثانیه</string>
+    <string name="english_vocabulary">واژه انگلیسی</string>
     <string name="error_notification_channel_failed">بدون اعلان</string>
     <string name="error_notification_channel_text">شروع محافظت ممکن نبود.</string>
     <string name="error_overlay_failed">نمایش صفحه استراحت انجام نشد و صفحهٔ بعدی برنامه‌ریزی شد.</string>
@@ -16,7 +23,18 @@
     <string name="error_overlay_failed_title">محافظت چشم</string>
     <string name="error_overlay_missing_permission">دسترسی «نمایش روی برنامه‌ها» وجود ندارد؛ صفحه استراحت نمایش داده نشد.</string>
     <string name="error_overlay_missing_permission_title">محافظت چشم</string>
+    <string name="eye_care_tip">نکته سلامت چشم</string>
     <string name="field_custom_label">سفارشی</string>
+    <string name="format_hours">%1$d ساعت</string>
+    <string name="format_hours_minutes">%1$d ساعت و %2$d دقیقه</string>
+    <string name="format_minutes">%1$d دقیقه</string>
+    <string name="format_seconds">%1$d ثانیه</string>
+    <string name="hero_subtitle">چشمانت در طول کار مراقبت می‌شوند</string>
+    <string name="hero_title">محافظت چشم</string>
+    <string name="learned_cards_count">%1$d کارت ذخیره شده</string>
+    <string name="learned_cards_description">مشاهده کارت‌های ذخیره شده</string>
+    <string name="learned_cards_title">یادگرفته‌ها</string>
+    <string name="learning_content_title">محتوای یادگیری</string>
     <string name="notification_stop">توقف</string>
     <string name="notification_text">زمان‌بندی استراحت چشم فعال است</string>
     <string name="notification_title">👁 محافظت چشم فعال است</string>
@@ -34,11 +52,24 @@
     <string name="permission_overlay_description">برای نمایش صفحه استراحت بالای همه برنامه‌ها استفاده می‌شود.</string>
     <string name="permission_overlay_title">نمایش روی برنامه‌ها</string>
     <string name="permission_warning">برای شروع محافظت، دسترسی‌های اصلی را مجاز کنید.</string>
+    <string name="remind_later">۵ دقیقه بعد یادآوری کن</string>
+    <string name="save">ذخیره</string>
+    <string name="saved">ذخیره شده</string>
     <string name="screen_subtitle">به شما یادآوری می‌کنیم در طول کار به چشمانتان استراحت بدهید.</string>
     <string name="screen_title">👁 محافظت چشم</string>
     <string name="start_button">شروع محافظت</string>
+    <string name="stat_break_time">زمان استراحت</string>
+    <string name="stat_breaks_done">استراحت انجام شده</string>
+    <string name="stat_protection_time">زمان محافظت</string>
+    <string name="stats_active_protection">⏱ %1$s محافظت فعال بود</string>
+    <string name="stats_break_time">👁 %1$s زمان استراحت</string>
+    <string name="stats_breaks_done">🟢 %1$d استراحت انجام شد</string>
+    <string name="stats_title">امروز</string>
+    <string name="status_active">فعال است</string>
+    <string name="status_inactive">متوقف</string>
     <string name="stop_button">توقف محافظت</string>
     <string name="unit_minutes">دقیقه</string>
     <string name="unit_seconds">ثانیه</string>
+    <string name="vocabulary_english">واژه انگلیسی</string>
     <string name="work_interval_title">فاصله کاری</string>
 </resources>

@@ -3,9 +3,11 @@ package com.example.eyeguard.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.eyeguard.domain.model.ContentCard
 import com.example.eyeguard.domain.models.BreakEndAlertType
 import com.example.eyeguard.domain.models.DailyStats
 import com.example.eyeguard.domain.models.EyeGuardSettings
+import com.example.eyeguard.domain.repository.ContentRepository
 import com.example.eyeguard.domain.repository.SettingsRepository
 import com.example.eyeguard.domain.repository.StatsRepository
 import com.example.eyeguard.domain.usecases.ObserveSettingsUseCase
@@ -20,13 +22,16 @@ import kotlinx.coroutines.launch
 data class MainUiState(
     val settings: EyeGuardSettings = EyeGuardSettings(),
     val dailyStats: DailyStats = DailyStats.EMPTY,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val savedCards: List<ContentCard> = emptyList(),
+    val vocabularyEnabled: Boolean = true
 )
 
 class EyeGuardViewModel(
     private val observeSettings: ObserveSettingsUseCase,
     private val updateSettings: UpdateSettingsUseCase,
-    private val statsRepository: StatsRepository
+    private val statsRepository: StatsRepository,
+    private val contentRepository: ContentRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
@@ -43,6 +48,7 @@ class EyeGuardViewModel(
             .launchIn(viewModelScope)
 
         refreshDailyStats()
+        refreshSavedCards()
     }
 
     fun refreshDailyStats() {
@@ -50,6 +56,32 @@ class EyeGuardViewModel(
             val stats = statsRepository.getDailyStats()
             _uiState.value = _uiState.value.copy(dailyStats = stats)
         }
+    }
+
+    fun refreshSavedCards() {
+        viewModelScope.launch {
+            contentRepository.getSavedCards().onEach { cards ->
+                _uiState.value = _uiState.value.copy(savedCards = cards)
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    fun toggleSaveCard(card: ContentCard) {
+        viewModelScope.launch {
+            contentRepository.updateSavedStatus(card.id, !card.isSaved)
+            refreshSavedCards()
+        }
+    }
+
+    fun removeSavedCard(cardId: Long) {
+        viewModelScope.launch {
+            contentRepository.updateSavedStatus(cardId, false)
+            refreshSavedCards()
+        }
+    }
+
+    fun setVocabularyEnabled(enabled: Boolean) {
+        _uiState.value = _uiState.value.copy(vocabularyEnabled = enabled)
     }
 
     fun setWorkInterval(minutes: Int) {
@@ -77,7 +109,8 @@ class EyeGuardViewModel(
 
 class EyeGuardViewModelFactory(
     private val settingsRepository: SettingsRepository,
-    private val statsRepository: StatsRepository
+    private val statsRepository: StatsRepository,
+    private val contentRepository: ContentRepository
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -86,7 +119,8 @@ class EyeGuardViewModelFactory(
             return EyeGuardViewModel(
                 ObserveSettingsUseCase(settingsRepository),
                 UpdateSettingsUseCase(settingsRepository),
-                statsRepository
+                statsRepository,
+                contentRepository
             ) as T
         }
 
