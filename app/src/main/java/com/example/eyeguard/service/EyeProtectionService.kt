@@ -19,9 +19,19 @@ import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import androidx.lifecycle.Lifecycle
@@ -37,6 +47,7 @@ import com.example.eyeguard.R
 import com.example.eyeguard.domain.models.BreakEndAlertType
 import com.example.eyeguard.presentation.MainActivity
 import com.example.eyeguard.presentation.theme.EyeGuardTheme
+import com.example.eyeguard.presentation.theme.TextSecondary
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -83,6 +94,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
     }
 
     private var overlayView: ComposeView? = null
+    private var remindButtonView: ComposeView? = null
     private var breakJob: Job? = null
     private var breakWakeLock: PowerManager.WakeLock? = null
     private var currentBreakEventId: Long = 0L
@@ -430,7 +442,6 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
                     onAction = { action ->
                         when (action) {
                             BreakAction.Continue -> handleContinue()
-                            BreakAction.RemindLater -> handleRemindLater()
                             is BreakAction.SaveCard -> {
                                 lifecycleScope.launch {
                                     val newSavedState = !action.card.isSaved
@@ -446,7 +457,6 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
                             }
                         }
                     },
-                    showRemindLater = !isReminder,
                     contentCards = contentCards.collectAsState().value,
                     savedCardIds = savedCardIds.collectAsState().value
                 )
@@ -497,6 +507,10 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
             return
         }
 
+        if (!isReminder) {
+            showRemindButton()
+        }
+
         breakJob?.cancel()
 
         breakJob = lifecycleScope.launch {
@@ -524,6 +538,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
             }
 
             finished.value = true
+            hideRemindButton()
             enableOverlayTouches()
             Log.d(TAG, "Break countdown finished; touches enabled")
 
@@ -616,6 +631,83 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
         }
     }
 
+    private fun createRemindButtonLayoutParams(): WindowManager.LayoutParams {
+        val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        } else {
+            @Suppress("DEPRECATION")
+            WindowManager.LayoutParams.TYPE_PHONE
+        }
+
+        val flags =
+            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+
+        val bottomMargin = (48 * resources.displayMetrics.density).toInt()
+
+        return WindowManager.LayoutParams(
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            type,
+            flags,
+            PixelFormat.TRANSLUCENT
+        ).apply {
+            gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+            y = bottomMargin
+        }
+    }
+
+    private fun showRemindButton() {
+        if (remindButtonView != null) return
+
+        val buttonView = ComposeView(this)
+        buttonView.setViewTreeLifecycleOwner(this)
+        buttonView.setViewTreeSavedStateRegistryOwner(this)
+        buttonView.setViewCompositionStrategy(
+            ViewCompositionStrategy.DisposeOnDetachedFromWindow
+        )
+
+        buttonView.setContent {
+            EyeGuardTheme {
+                OutlinedButton(
+                    onClick = { handleRemindLater() },
+                    modifier = Modifier
+                        .widthIn(min = 240.dp)
+                        .height(48.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = TextSecondary
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.remind_later),
+                        fontSize = 14.sp
+                    )
+                }
+            }
+        }
+
+        try {
+            windowManager.addView(buttonView, createRemindButtonLayoutParams())
+            remindButtonView = buttonView
+            Log.d(TAG, "Remind-later button overlay added")
+        } catch (throwable: Throwable) {
+            Log.e(TAG, "Failed to add remind-later button overlay", throwable)
+        }
+    }
+
+    private fun hideRemindButton() {
+        remindButtonView?.let { view ->
+            try {
+                windowManager.removeView(view)
+            } catch (_: Exception) {
+                // Ignore removal failures.
+            }
+        }
+        remindButtonView = null
+    }
+
     private fun enableOverlayTouches() {
         val view = overlayView ?: return
 
@@ -695,6 +787,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
         }
 
         overlayView = null
+        hideRemindButton()
         releaseWakeLock()
     }
 

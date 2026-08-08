@@ -25,7 +25,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -67,7 +66,6 @@ enum class BreakPhase {
 
 sealed class BreakAction {
     data object Continue : BreakAction()
-    data object RemindLater : BreakAction()
     data class SaveCard(val card: ContentCard) : BreakAction()
 }
 
@@ -77,7 +75,6 @@ fun BreakOverlayContent(
     totalBreakDuration: Int,
     finished: Boolean,
     onAction: (BreakAction) -> Unit,
-    showRemindLater: Boolean = true,
     contentCards: List<ContentCard> = emptyList(),
     savedCardIds: Set<Long> = emptySet()
 ) {
@@ -175,24 +172,6 @@ fun BreakOverlayContent(
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
-
-                    if (showRemindLater) {
-                        OutlinedButton(
-                            onClick = { onAction(BreakAction.RemindLater) },
-                            modifier = Modifier
-                                .widthIn(min = 240.dp)
-                                .height(48.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = TextSecondary
-                            ),
-                            shape = RoundedCornerShape(12.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.remind_later),
-                                fontSize = 14.sp
-                            )
-                        }
-                    }
                 }
 
                 BreakPhase.ACTIVE -> {
@@ -238,24 +217,6 @@ fun BreakOverlayContent(
                     }
 
                     Spacer(modifier = Modifier.weight(1f))
-
-                    if (showRemindLater) {
-                        OutlinedButton(
-                            onClick = { onAction(BreakAction.RemindLater) },
-                            modifier = Modifier
-                                .widthIn(min = 240.dp)
-                                .height(48.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = TextSecondary
-                            ),
-                            shape = RoundedCornerShape(12.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.remind_later),
-                                fontSize = 14.sp
-                            )
-                        }
-                    }
                 }
 
                 BreakPhase.FINISHED -> {
@@ -277,26 +238,6 @@ fun BreakOverlayContent(
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold
                         )
-                    }
-
-                    if (showRemindLater) {
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        OutlinedButton(
-                            onClick = { onAction(BreakAction.RemindLater) },
-                            modifier = Modifier
-                                .widthIn(min = 240.dp)
-                                .height(48.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = TextSecondary
-                            ),
-                            shape = RoundedCornerShape(12.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.remind_later),
-                                fontSize = 14.sp
-                            )
-                        }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
