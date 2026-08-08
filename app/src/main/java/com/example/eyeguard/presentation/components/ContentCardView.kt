@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,6 +28,7 @@ import com.example.eyeguard.R
 import com.example.eyeguard.domain.model.ContentCard
 import com.example.eyeguard.domain.model.ContentCategory
 import com.example.eyeguard.presentation.theme.BluePrimary
+import com.example.eyeguard.presentation.theme.GlassSurface
 import com.example.eyeguard.presentation.theme.GreenSecondary
 import com.example.eyeguard.presentation.theme.StatusActive
 import com.example.eyeguard.presentation.theme.TextPrimary
@@ -38,15 +40,21 @@ fun ContentCardView(
     card: ContentCard,
     isSaved: Boolean,
     onSave: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    surfaceColor: Color = GlassSurface
 ) {
     when (card.category) {
-        ContentCategory.EYE_CARE -> EyeCareCard(card = card, modifier = modifier)
+        ContentCategory.EYE_CARE -> EyeCareCard(
+            card = card,
+            modifier = modifier,
+            surfaceColor = surfaceColor
+        )
         ContentCategory.ENGLISH_VOCABULARY -> VocabularyCard(
             card = card,
             isSaved = isSaved,
             onSave = onSave,
-            modifier = modifier
+            modifier = modifier,
+            surfaceColor = surfaceColor
         )
     }
 }
@@ -54,9 +62,13 @@ fun ContentCardView(
 @Composable
 private fun EyeCareCard(
     card: ContentCard,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    surfaceColor: Color = GlassSurface
 ) {
-    GlassCard(modifier = modifier.fillMaxWidth()) {
+    GlassCard(
+        modifier = modifier.fillMaxWidth(),
+        surfaceColor = surfaceColor
+    ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -97,7 +109,8 @@ private fun VocabularyCard(
     card: ContentCard,
     isSaved: Boolean,
     onSave: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    surfaceColor: Color = GlassSurface
 ) {
     val saveColor by animateColorAsState(
         targetValue = if (isSaved) StatusActive else TextSecondary,
@@ -105,7 +118,10 @@ private fun VocabularyCard(
         label = "saveColor"
     )
 
-    GlassCard(modifier = modifier.fillMaxWidth()) {
+    GlassCard(
+        modifier = modifier.fillMaxWidth(),
+        surfaceColor = surfaceColor
+    ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)

@@ -50,6 +50,7 @@ import com.example.eyeguard.presentation.components.CircularCountdown
 import com.example.eyeguard.presentation.components.ContentCardView
 import com.example.eyeguard.presentation.components.EyeIcon
 import com.example.eyeguard.presentation.theme.BluePrimary
+import com.example.eyeguard.presentation.theme.GlassSurfaceStrong
 import com.example.eyeguard.presentation.theme.GradientDarkEnd
 import com.example.eyeguard.presentation.theme.GradientDarkStart
 import com.example.eyeguard.presentation.theme.GreenSecondary
@@ -229,7 +230,8 @@ fun BreakOverlayContent(
                                 ContentCardView(
                                     card = card,
                                     isSaved = card.id in savedCardIds,
-                                    onSave = { onAction(BreakAction.SaveCard(card)) }
+                                    onSave = { onAction(BreakAction.SaveCard(card)) },
+                                    surfaceColor = GlassSurfaceStrong
                                 )
                             }
                         }
@@ -275,6 +277,26 @@ fun BreakOverlayContent(
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold
                         )
+                    }
+
+                    if (showRemindLater) {
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        OutlinedButton(
+                            onClick = { onAction(BreakAction.RemindLater) },
+                            modifier = Modifier
+                                .widthIn(min = 240.dp)
+                                .height(48.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = TextSecondary
+                            ),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.remind_later),
+                                fontSize = 14.sp
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))

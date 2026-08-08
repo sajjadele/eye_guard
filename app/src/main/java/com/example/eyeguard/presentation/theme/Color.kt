@@ -45,6 +45,7 @@ val DarkOutlineVariant = Color(0xFF44474F)
 
 // ── Glassmorphism ─────────────────────────────────
 val GlassSurface = Color(0x14FFFFFF)
+val GlassSurfaceStrong = Color(0x400A0E1A)
 val GlassBorder = Color(0x29FFFFFF)
 val GlassHighlight = Color(0x0AFFFFFF)
 
