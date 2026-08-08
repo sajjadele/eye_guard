@@ -11,7 +11,8 @@ data class EyeGuardSettings(
     val enabled: Boolean = false,
     val workIntervalMinutes: Int = DEFAULT_WORK_MINUTES,
     val breakDurationSeconds: Int = DEFAULT_BREAK_SECONDS,
-    val breakEndAlertType: BreakEndAlertType = DEFAULT_BREAK_END_ALERT
+    val breakEndAlertType: BreakEndAlertType = DEFAULT_BREAK_END_ALERT,
+    val vocabularyEnabled: Boolean = true
 ) {
     companion object {
         const val DEFAULT_WORK_MINUTES = 20

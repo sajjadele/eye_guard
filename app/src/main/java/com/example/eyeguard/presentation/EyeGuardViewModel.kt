@@ -23,8 +23,7 @@ data class MainUiState(
     val settings: EyeGuardSettings = EyeGuardSettings(),
     val dailyStats: DailyStats = DailyStats.EMPTY,
     val isLoading: Boolean = true,
-    val savedCards: List<ContentCard> = emptyList(),
-    val vocabularyEnabled: Boolean = true
+    val savedCards: List<ContentCard> = emptyList()
 )
 
 class EyeGuardViewModel(
@@ -81,7 +80,7 @@ class EyeGuardViewModel(
     }
 
     fun setVocabularyEnabled(enabled: Boolean) {
-        _uiState.value = _uiState.value.copy(vocabularyEnabled = enabled)
+        update { it.copy(vocabularyEnabled = enabled) }
     }
 
     fun setWorkInterval(minutes: Int) {

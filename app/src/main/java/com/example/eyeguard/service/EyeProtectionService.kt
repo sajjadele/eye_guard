@@ -505,7 +505,10 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
             // Fetch content cards for the break
             try {
                 val settings = repository.settings.first()
-                val cards = contentRepository.getCardsForBreak(breakDurationSeconds, true)
+                val cards = contentRepository.getCardsForBreak(
+                    breakDurationSeconds,
+                    settings.vocabularyEnabled
+                )
                 contentCards.value = cards
 
                 // Fetch saved card IDs
@@ -595,6 +598,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
 
         val flags =
             WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or

@@ -28,7 +28,8 @@ class SettingsRepositoryImpl(
                         ?.let { name ->
                             runCatching { BreakEndAlertType.valueOf(name) }.getOrNull()
                         }
-                        ?: EyeGuardSettings.DEFAULT_BREAK_END_ALERT
+                        ?: EyeGuardSettings.DEFAULT_BREAK_END_ALERT,
+                    vocabularyEnabled = prefs[PrefsKeys.VOCABULARY_ENABLED] ?: true
                 )
             }
             .catch {
@@ -47,7 +48,8 @@ class SettingsRepositoryImpl(
                     ?.let { name ->
                         runCatching { BreakEndAlertType.valueOf(name) }.getOrNull()
                     }
-                    ?: EyeGuardSettings.DEFAULT_BREAK_END_ALERT
+                    ?: EyeGuardSettings.DEFAULT_BREAK_END_ALERT,
+                vocabularyEnabled = prefs[PrefsKeys.VOCABULARY_ENABLED] ?: true
             )
 
             val updated = transform(current).let {
@@ -61,6 +63,7 @@ class SettingsRepositoryImpl(
             prefs[PrefsKeys.WORK_INTERVAL_MINUTES] = updated.workIntervalMinutes
             prefs[PrefsKeys.BREAK_DURATION_SECONDS] = updated.breakDurationSeconds
             prefs[PrefsKeys.BREAK_END_ALERT] = updated.breakEndAlertType.name
+            prefs[PrefsKeys.VOCABULARY_ENABLED] = updated.vocabularyEnabled
         }
     }
 }

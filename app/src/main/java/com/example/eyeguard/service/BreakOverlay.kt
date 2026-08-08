@@ -113,7 +113,10 @@ fun BreakOverlayContent(
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(GradientDarkStart, GradientDarkEnd)
+                    colors = listOf(
+                        GradientDarkStart.copy(alpha = 0.82f),
+                        GradientDarkEnd.copy(alpha = 0.82f)
+                    )
                 )
             )
             .onGloballyPositioned { coordinates ->

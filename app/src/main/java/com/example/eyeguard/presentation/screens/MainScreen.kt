@@ -74,7 +74,6 @@ fun MainScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showLearnedCards by remember { mutableStateOf(false) }
-    var vocabularyEnabled by remember { mutableStateOf(true) }
 
     var debugTestIntervalSelected by remember { mutableStateOf(false) }
 
@@ -311,16 +310,14 @@ fun MainScreen(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { 
-                                        vocabularyEnabled = !vocabularyEnabled
-                                        viewModel.setVocabularyEnabled(vocabularyEnabled)
+                                    .clickable {
+                                        viewModel.setVocabularyEnabled(!uiState.settings.vocabularyEnabled)
                                     },
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Checkbox(
-                                    checked = vocabularyEnabled,
+                                    checked = uiState.settings.vocabularyEnabled,
                                     onCheckedChange = { enabled ->
-                                        vocabularyEnabled = enabled
                                         viewModel.setVocabularyEnabled(enabled)
                                     },
                                     colors = CheckboxDefaults.colors(
