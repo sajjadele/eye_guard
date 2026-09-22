@@ -14,4 +14,5 @@ object PrefsKeys {
     val BREAK_DURATION_SECONDS = intPreferencesKey("break_duration_seconds")
     val BREAK_END_ALERT = stringPreferencesKey("break_end_alert")
     val VOCABULARY_ENABLED = booleanPreferencesKey("vocabulary_enabled")
+    val THEME_MODE = stringPreferencesKey("theme_mode")
 }

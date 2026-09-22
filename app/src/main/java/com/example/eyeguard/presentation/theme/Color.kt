@@ -2,79 +2,99 @@ package com.example.eyeguard.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
-// ── Background Gradients ──────────────────────────
-val GradientDarkStart = Color(0xFF0A0E1A)
-val GradientDarkMid = Color(0xFF0D1525)
-val GradientDarkEnd = Color(0xFF0F1B2D)
+// ── Warm Dark Gradients ──────────────────────────
+val WarmDarkBgStart = Color(0xFF0F1117)
+val WarmDarkBgMid = Color(0xFF141720)
+val WarmDarkBgEnd = Color(0xFF191B24)
 
-// ── Primary (Calm Blue) ──────────────────────────
-val BluePrimary = Color(0xFF8AB4F8)
-val BlueOnPrimary = Color(0xFF003060)
-val BluePrimaryContainer = Color(0xFF1A3A5C)
-val BlueOnPrimaryContainer = Color(0xFFD3E3FD)
+// Backward compatibility
+val GradientDarkStart = WarmDarkBgStart
+val GradientDarkMid = WarmDarkBgMid
+val GradientDarkEnd = WarmDarkBgEnd
 
-// ── Secondary (Eye-care Green) ────────────────────
-val GreenSecondary = Color(0xFF81C995)
-val GreenOnSecondary = Color(0xFF00391A)
-val GreenSecondaryContainer = Color(0xFF1B3A2A)
-val GreenOnSecondaryContainer = Color(0xFFC4EED4)
+// ── Warm Light Gradients ─────────────────────────
+val WarmLightBgStart = Color(0xFFFAF7F2)
+val WarmLightBgMid = Color(0xFFF4EFE6)
+val WarmLightBgEnd = Color(0xFFEBE4D8)
 
-// ── Tertiary (Soft Purple) ────────────────────────
-val PurpleTertiary = Color(0xFFD7BCFF)
-val PurpleOnTertiary = Color(0xFF381E72)
-val PurpleTertiaryContainer = Color(0xFF2D2250)
-val PurpleOnTertiaryContainer = Color(0xFFE9DDFF)
+// ── Primary Accents (Emerald & Amber Glow) ────────
+val EmeraldPrimary = Color(0xFF10B981)
+val EmeraldGlow = Color(0xFF34D399)
+val EmeraldDark = Color(0xFF065F46)
+val BluePrimary = Color(0xFF38BDF8)
+val BlueOnPrimary = Color(0xFF002A45)
+val BluePrimaryContainer = Color(0xFF0C4A6E)
+val BlueOnPrimaryContainer = Color(0xFFBAE6FD)
 
-// ── Error ─────────────────────────────────────────
-val ErrorRed = Color(0xFFFFB4AB)
-val ErrorOnRed = Color(0xFF690005)
-val ErrorRedContainer = Color(0xFF93000A)
-val ErrorOnRedContainer = Color(0xFFFFDAD6)
+// ── Secondary Accents (Warm Amber & Honey) ─────────
+val AmberWarm = Color(0xFFF59E0B)
+val AmberGlow = Color(0xFFFCD34D)
+val GreenSecondary = EmeraldPrimary
+val GreenOnSecondary = Color(0xFF003822)
+val GreenSecondaryContainer = Color(0xFF064E3B)
+val GreenOnSecondaryContainer = Color(0xFFA7F3D0)
 
-// ── Dark Theme Background & Surface ──────────────
-val DarkBg = Color(0xFF0A0E1A)
-val DarkOnBg = Color(0xFFE2E2E6)
-val DarkSurface = Color(0xFF0F1114)
-val DarkOnSurface = Color(0xFFE2E2E6)
-val DarkSurfaceVariant = Color(0xFF252830)
-val DarkOnSurfaceVariant = Color(0xFFC3C6CF)
+// ── Tertiary (Soft Violet / Lavender) ─────────────
+val PurpleTertiary = Color(0xFFA78BFA)
+val PurpleOnTertiary = Color(0xFF2E1065)
+val PurpleTertiaryContainer = Color(0xFF4C1D95)
+val PurpleOnTertiaryContainer = Color(0xFFDDD6FE)
 
-// ── Outline ───────────────────────────────────────
-val DarkOutline = Color(0xFF8D9199)
-val DarkOutlineVariant = Color(0xFF44474F)
+// ── Error & Warning ───────────────────────────────
+val ErrorRed = Color(0xFFF87171)
+val ErrorOnRed = Color(0xFF450A0A)
+val ErrorRedContainer = Color(0xFF7F1D1D)
+val ErrorOnRedContainer = Color(0xFFFECACA)
 
-// ── Glassmorphism ─────────────────────────────────
-val GlassSurface = Color(0x14FFFFFF)
-val GlassSurfaceStrong = Color(0x400A0E1A)
-val GlassBorder = Color(0x29FFFFFF)
-val GlassHighlight = Color(0x0AFFFFFF)
+// ── Dark Theme Background & Surface ───────────────
+val DarkBg = WarmDarkBgStart
+val DarkOnBg = Color(0xFFF1F5F9)
+val DarkSurface = Color(0xFF13151D)
+val DarkOnSurface = Color(0xFFF1F5F9)
+val DarkSurfaceVariant = Color(0xFF1E212B)
+val DarkOnSurfaceVariant = Color(0xFFCBD5E1)
+val DarkOutline = Color(0xFF64748B)
+val DarkOutlineVariant = Color(0xFF334155)
+
+// ── Light Theme Background & Surface ──────────────
+val LightBg = WarmLightBgStart
+val LightOnBg = Color(0xFF1E293B)
+val LightSurface = Color(0xFFFFFFFF)
+val LightOnSurface = Color(0xFF1E293B)
+val LightSurfaceVariant = Color(0xFFF1EDE4)
+val LightOnSurfaceVariant = Color(0xFF64748B)
+val LightOutline = Color(0xFF94A3B8)
+val LightOutlineVariant = Color(0xFFE2E8F0)
+val LightPrimary = Color(0xFF0D9488)
+val LightOnPrimary = Color.White
+val LightPrimaryContainer = Color(0xFFCCFBF1)
+val LightOnPrimaryContainer = Color(0xFF115E59)
+val LightSecondary = Color(0xFFD97706)
+val LightOnSecondary = Color.White
+val LightSecondaryContainer = Color(0xFFFEF3C7)
+val LightOnSecondaryContainer = Color(0xFF78350F)
+
+// ── Glassmorphism Specification ───────────────────
+val GlassDarkSurface = Color(0x1FFFFFFF)
+val GlassDarkBorder = Color(0x33FFFFFF)
+val GlassDarkHighlight = Color(0x4DFFFFFF)
+
+val GlassLightSurface = Color(0xE6FFFFFF)
+val GlassLightBorder = Color(0x66FFFFFF)
+val GlassLightHighlight = Color(0x99FFFFFF)
+
+// Legacy aliases
+val GlassSurface = GlassDarkSurface
+val GlassSurfaceStrong = Color(0x3D141720)
+val GlassBorder = GlassDarkBorder
+val GlassHighlight = GlassDarkHighlight
 
 // ── Semantic Status ───────────────────────────────
-val StatusActive = Color(0xFF4ADE80)
-val StatusInactive = Color(0xFF6B7280)
-val StatusWarning = Color(0xFFFBBF24)
+val StatusActive = EmeraldGlow
+val StatusInactive = Color(0xFF94A3B8)
+val StatusWarning = AmberWarm
 
 // ── Text Hierarchy ────────────────────────────────
-val TextPrimary = Color(0xFFE8ECF1)
-val TextSecondary = Color(0xFF9CA3AF)
-val TextTertiary = Color(0xFF6B7280)
-
-// ── Light Theme ───────────────────────────────────
-val LightPrimary = Color(0xFF1A73E8)
-val LightOnPrimary = Color.White
-val LightPrimaryContainer = Color(0xFFD3E3FD)
-val LightOnPrimaryContainer = Color(0xFF003060)
-
-val LightSecondary = Color(0xFF188038)
-val LightOnSecondary = Color.White
-val LightSecondaryContainer = Color(0xFFC4EED4)
-val LightOnSecondaryContainer = Color(0xFF00391A)
-
-val LightBg = Color(0xFFFDFCFF)
-val LightOnBg = Color(0xFF1A1C1E)
-val LightSurface = Color(0xFFFDFCFF)
-val LightOnSurface = Color(0xFF1A1C1E)
-val LightSurfaceVariant = Color(0xFFDFE2EB)
-val LightOnSurfaceVariant = Color(0xFF43474E)
-val LightOutline = Color(0xFF73777F)
-val LightOutlineVariant = Color(0xFFC3C6CF)
+val TextPrimary = Color(0xFFF8FAFC)
+val TextSecondary = Color(0xFF94A3B8)
+val TextTertiary = Color(0xFF64748B)

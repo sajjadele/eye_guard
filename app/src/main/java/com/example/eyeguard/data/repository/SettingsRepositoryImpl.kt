@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.example.eyeguard.data.preferences.PrefsKeys
+import com.example.eyeguard.domain.models.AppThemeMode
 import com.example.eyeguard.domain.models.BreakEndAlertType
 import com.example.eyeguard.domain.models.EyeGuardSettings
 import com.example.eyeguard.domain.repository.SettingsRepository
@@ -29,7 +30,12 @@ class SettingsRepositoryImpl(
                             runCatching { BreakEndAlertType.valueOf(name) }.getOrNull()
                         }
                         ?: EyeGuardSettings.DEFAULT_BREAK_END_ALERT,
-                    vocabularyEnabled = prefs[PrefsKeys.VOCABULARY_ENABLED] ?: true
+                    vocabularyEnabled = prefs[PrefsKeys.VOCABULARY_ENABLED] ?: true,
+                    themeMode = prefs[PrefsKeys.THEME_MODE]
+                        ?.let { name ->
+                            runCatching { AppThemeMode.valueOf(name) }.getOrNull()
+                        }
+                        ?: AppThemeMode.DARK
                 )
             }
             .catch {
@@ -49,7 +55,12 @@ class SettingsRepositoryImpl(
                         runCatching { BreakEndAlertType.valueOf(name) }.getOrNull()
                     }
                     ?: EyeGuardSettings.DEFAULT_BREAK_END_ALERT,
-                vocabularyEnabled = prefs[PrefsKeys.VOCABULARY_ENABLED] ?: true
+                vocabularyEnabled = prefs[PrefsKeys.VOCABULARY_ENABLED] ?: true,
+                themeMode = prefs[PrefsKeys.THEME_MODE]
+                    ?.let { name ->
+                        runCatching { AppThemeMode.valueOf(name) }.getOrNull()
+                    }
+                    ?: AppThemeMode.DARK
             )
 
             val updated = transform(current).let {
@@ -64,6 +75,7 @@ class SettingsRepositoryImpl(
             prefs[PrefsKeys.BREAK_DURATION_SECONDS] = updated.breakDurationSeconds
             prefs[PrefsKeys.BREAK_END_ALERT] = updated.breakEndAlertType.name
             prefs[PrefsKeys.VOCABULARY_ENABLED] = updated.vocabularyEnabled
+            prefs[PrefsKeys.THEME_MODE] = updated.themeMode.name
         }
     }
 }

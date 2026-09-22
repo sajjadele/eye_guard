@@ -160,22 +160,35 @@ fun MainScreen(
                     CircularProgressIndicator()
                 }
             } else {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(
-                            Brush.verticalGradient(
-                                colors = listOf(GradientDarkStart, GradientDarkEnd)
-                            )
+                    val isDark = MaterialTheme.colorScheme.background == com.example.eyeguard.presentation.theme.DarkBg
+                    val bgColors = if (isDark) {
+                        listOf(
+                            com.example.eyeguard.presentation.theme.WarmDarkBgStart,
+                            com.example.eyeguard.presentation.theme.WarmDarkBgMid,
+                            com.example.eyeguard.presentation.theme.WarmDarkBgEnd
                         )
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 20.dp, vertical = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                    HeroSection(
-                        isProtectionActive = isRunning
-                    )
+                    } else {
+                        listOf(
+                            com.example.eyeguard.presentation.theme.WarmLightBgStart,
+                            com.example.eyeguard.presentation.theme.WarmLightBgMid,
+                            com.example.eyeguard.presentation.theme.WarmLightBgEnd
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Brush.verticalGradient(colors = bgColors))
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 20.dp, vertical = 24.dp),
+                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
+                        HeroSection(
+                            isProtectionActive = isRunning,
+                            themeMode = uiState.settings.themeMode,
+                            onToggleTheme = { viewModel.toggleTheme() }
+                        )
 
                     StatsCard(
                         stats = uiState.dailyStats

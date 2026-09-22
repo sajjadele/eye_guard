@@ -88,8 +88,8 @@ fun SettingsSection(
                             label = { Text(stringResource(R.string.chip_work_minutes, minutes)) },
                             enabled = !isProtectionRunning,
                             colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = BluePrimaryContainer,
-                                selectedLabelColor = BlueOnPrimaryContainer
+                                selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         )
                     }
@@ -113,8 +113,8 @@ fun SettingsSection(
                         label = { Text(stringResource(R.string.field_custom_label)) },
                         enabled = !isProtectionRunning,
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = BluePrimaryContainer,
-                            selectedLabelColor = BlueOnPrimaryContainer
+                            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     )
                 }
@@ -177,8 +177,8 @@ fun SettingsSection(
                             label = { Text(stringResource(R.string.chip_break_seconds, seconds)) },
                             enabled = !isProtectionRunning,
                             colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = BluePrimaryContainer,
-                                selectedLabelColor = BlueOnPrimaryContainer
+                                selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         )
                     }
@@ -189,8 +189,8 @@ fun SettingsSection(
                         label = { Text(stringResource(R.string.field_custom_label)) },
                         enabled = !isProtectionRunning,
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = BluePrimaryContainer,
-                            selectedLabelColor = BlueOnPrimaryContainer
+                            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     )
                 }
@@ -249,8 +249,8 @@ fun SettingsSection(
                             label = { Text(breakEndAlertLabel(type)) },
                             enabled = !isProtectionRunning,
                             colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = BluePrimaryContainer,
-                                selectedLabelColor = BlueOnPrimaryContainer
+                                selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         )
                     }

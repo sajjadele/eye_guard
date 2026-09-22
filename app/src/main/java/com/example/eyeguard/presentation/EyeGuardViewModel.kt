@@ -99,6 +99,20 @@ class EyeGuardViewModel(
         update { it.copy(enabled = enabled) }
     }
 
+    fun setThemeMode(mode: com.example.eyeguard.domain.models.AppThemeMode) {
+        update { it.copy(themeMode = mode) }
+    }
+
+    fun toggleTheme() {
+        val currentMode = _uiState.value.settings.themeMode
+        val newMode = if (currentMode == com.example.eyeguard.domain.models.AppThemeMode.LIGHT) {
+            com.example.eyeguard.domain.models.AppThemeMode.DARK
+        } else {
+            com.example.eyeguard.domain.models.AppThemeMode.LIGHT
+        }
+        setThemeMode(newMode)
+    }
+
     private fun update(transform: (EyeGuardSettings) -> EyeGuardSettings) {
         viewModelScope.launch {
             updateSettings(transform)
