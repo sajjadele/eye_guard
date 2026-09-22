@@ -56,21 +56,23 @@ class ContentRepositoryImpl(
         return contentDao.getSavedCardsList().map { it.toDomain() }
     }
 
-    override suspend fun initializeCatalog() = withContext(Dispatchers.IO) {
-        try {
-            // Purge any legacy experimental vocabulary cards from database
-            contentDao.deleteByCategory("ENGLISH_VOCABULARY")
+    override suspend fun initializeCatalog() {
+        withContext(Dispatchers.IO) {
+            try {
+                // Purge any legacy experimental vocabulary cards from database
+                contentDao.deleteByCategory("ENGLISH_VOCABULARY")
 
-            val existingTitles = contentDao.getAllTitles().toSet()
-            val seedCards = loadSeedContent()
+                val existingTitles = contentDao.getAllTitles().toSet()
+                val seedCards = loadSeedContent()
 
-            val missingCards = seedCards.filter { it.title !in existingTitles }
-            if (missingCards.isNotEmpty()) {
-                contentDao.insertAll(missingCards)
-                Log.d(TAG, "Seeded ${missingCards.size} eye care cards into database")
+                val missingCards = seedCards.filter { it.title !in existingTitles }
+                if (missingCards.isNotEmpty()) {
+                    contentDao.insertAll(missingCards)
+                    Log.d(TAG, "Seeded ${missingCards.size} eye care cards into database")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error initializing content catalog", e)
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error initializing content catalog", e)
         }
     }
 
