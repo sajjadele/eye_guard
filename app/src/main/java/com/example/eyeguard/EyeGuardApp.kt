@@ -23,6 +23,7 @@ class EyeGuardApp : Application() {
         EyeGuardContainer.init(this)
         applicationScope.launch {
             EyeGuardContainer.contentRepository.initializeCatalog()
+            EyeGuardContainer.contentRepository.syncRemoteTips()
         }
     }
 }

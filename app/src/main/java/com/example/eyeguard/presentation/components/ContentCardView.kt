@@ -38,25 +38,16 @@ import com.example.eyeguard.presentation.theme.TextTertiary
 @Composable
 fun ContentCardView(
     card: ContentCard,
-    isSaved: Boolean,
-    onSave: () -> Unit,
     modifier: Modifier = Modifier,
+    isSaved: Boolean = false,
+    onSave: () -> Unit = {},
     surfaceColor: Color = GlassSurface
 ) {
-    when (card.category) {
-        ContentCategory.EYE_CARE -> EyeCareCard(
-            card = card,
-            modifier = modifier,
-            surfaceColor = surfaceColor
-        )
-        ContentCategory.ENGLISH_VOCABULARY -> VocabularyCard(
-            card = card,
-            isSaved = isSaved,
-            onSave = onSave,
-            modifier = modifier,
-            surfaceColor = surfaceColor
-        )
-    }
+    EyeCareCard(
+        card = card,
+        modifier = modifier,
+        surfaceColor = surfaceColor
+    )
 }
 
 @Composable
@@ -71,25 +62,27 @@ private fun EyeCareCard(
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(text = "👁", fontSize = 16.sp)
+                Text(text = "👁", fontSize = 18.sp)
                 Text(
-                    text = "نکته سلامت چشم",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = TextSecondary
+                    text = card.title.ifEmpty { stringResource(R.string.eye_care_tip) },
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
 
             Text(
                 text = card.content,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.bodyLarge,
                 color = TextPrimary,
-                lineHeight = 28.sp
+                lineHeight = 26.sp,
+                fontWeight = FontWeight.Normal
             )
 
             card.example?.let { example ->
@@ -98,111 +91,6 @@ private fun EyeCareCard(
                     style = MaterialTheme.typography.bodyMedium,
                     color = TextSecondary,
                     lineHeight = 22.sp
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun VocabularyCard(
-    card: ContentCard,
-    isSaved: Boolean,
-    onSave: () -> Unit,
-    modifier: Modifier = Modifier,
-    surfaceColor: Color = GlassSurface
-) {
-    val saveColor by animateColorAsState(
-        targetValue = if (isSaved) StatusActive else TextSecondary,
-        animationSpec = tween(300),
-        label = "saveColor"
-    )
-
-    GlassCard(
-        modifier = modifier.fillMaxWidth(),
-        surfaceColor = surfaceColor
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(text = "🔤", fontSize = 16.sp)
-                Text(
-                    text = "واژه انگلیسی",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = TextSecondary
-                )
-            }
-
-            Text(
-                text = card.title,
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-                color = BluePrimary,
-                fontSize = 32.sp
-            )
-
-            Text(
-                text = card.content,
-                style = MaterialTheme.typography.titleLarge,
-                color = TextPrimary,
-                fontWeight = FontWeight.Medium,
-                lineHeight = 28.sp
-            )
-
-            card.translation?.let { translation ->
-                Text(
-                    text = translation,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TextSecondary,
-                    lineHeight = 22.sp
-                )
-            }
-
-            card.example?.let { example ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 4.dp)
-                ) {
-                    Text(
-                        text = "Example:",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = TextTertiary
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = example,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = TextSecondary,
-                        lineHeight = 22.sp
-                    )
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
-            ) {
-                IconButton(onClick = onSave) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_save),
-                        contentDescription = if (isSaved) "ذخیره شده" else "ذخیره",
-                        tint = saveColor
-                    )
-                }
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = if (isSaved) "ذخیره شده" else "ذخیره",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = saveColor
                 )
             }
         }

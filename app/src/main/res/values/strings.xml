@@ -84,14 +84,12 @@
     <!-- Control Card -->
     <string name="control_config_summary">Every %1$d min — %2$d sec rest</string>
 
-    <!-- Learning Content -->
-    <string name="learning_content_title">Learning Content</string>
-    <string name="vocabulary_english">English Vocabulary</string>
-    <string name="learned_cards_title">Saved Words</string>
-    <string name="learned_cards_count">%1$d cards saved</string>
-    <string name="learned_cards_description">Review saved learning cards</string>
+    <!-- Eye Care Tips & Remote Sync -->
+    <string name="eye_care_tips_title">Eye Care Tips</string>
+    <string name="eye_care_tips_count">%1$d active health tips</string>
+    <string name="eye_care_tips_sync_now">Sync Tips</string>
+    <string name="eye_care_tips_syncing">Updating tips...</string>
+    <string name="eye_care_tips_synced">Tips updated successfully</string>
+    <string name="eye_care_tips_sync_offline">Offline mode (local tips)</string>
     <string name="eye_care_tip">Eye Care Tip</string>
-    <string name="english_vocabulary">English Word</string>
-    <string name="saved">Saved</string>
-    <string name="save">Save</string>
 </resources>

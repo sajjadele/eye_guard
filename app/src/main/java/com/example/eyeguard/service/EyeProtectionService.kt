@@ -518,16 +518,8 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
 
             // Fetch content cards for the break
             try {
-                val settings = repository.settings.first()
-                val cards = contentRepository.getCardsForBreak(
-                    breakDurationSeconds,
-                    settings.vocabularyEnabled
-                )
+                val cards = contentRepository.getCardsForBreak(breakDurationSeconds)
                 contentCards.value = cards
-
-                // Fetch saved card IDs
-                val savedCards = contentRepository.getSavedCardsList()
-                savedCardIds.value = savedCards.map { it.id }.toSet()
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load content cards", e)
             }

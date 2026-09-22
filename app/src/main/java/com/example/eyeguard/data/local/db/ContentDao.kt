@@ -24,6 +24,21 @@ interface ContentDao {
     @Query("SELECT COUNT(*) FROM content_cards")
     suspend fun getCardCount(): Int
 
+    @Query("SELECT COUNT(*) FROM content_cards WHERE category = 'EYE_CARE'")
+    fun getEyeCareCountFlow(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM content_cards WHERE category = 'EYE_CARE'")
+    suspend fun getEyeCareCount(): Int
+
+    @Query("SELECT title FROM content_cards")
+    suspend fun getAllTitles(): List<String>
+
+    @Query("SELECT content FROM content_cards")
+    suspend fun getAllContents(): List<String>
+
+    @Query("DELETE FROM content_cards WHERE category = :category")
+    suspend fun deleteByCategory(category: String)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(cards: List<ContentCardEntity>)
 

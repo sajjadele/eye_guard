@@ -60,11 +60,16 @@ import com.example.eyeguard.service.startEyeProtection
 import com.example.eyeguard.service.startEyeProtectionTest
 import com.example.eyeguard.service.stopEyeProtection
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import com.example.eyeguard.presentation.components.ContentCardView
 
 @Composable
 fun MainScreen(
@@ -73,8 +78,6 @@ fun MainScreen(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var showLearnedCards by remember { mutableStateOf(false) }
-
     var debugTestIntervalSelected by remember { mutableStateOf(false) }
 
     val overlayGranted = remember {
@@ -142,14 +145,7 @@ fun MainScreen(
     val isRunning = uiState.settings.enabled
     val requiredPermissionsGranted = overlayGranted.value && notificationGranted.value
 
-    if (showLearnedCards) {
-        LearnedCardsScreen(
-            savedCards = uiState.savedCards,
-            onRemoveCard = { cardId -> viewModel.removeSavedCard(cardId) },
-            onBack = { showLearnedCards = false }
-        )
-    } else {
-        Scaffold { paddingValues ->
+    Scaffold { paddingValues ->
             if (uiState.isLoading) {
                 Box(
                     modifier = Modifier
@@ -309,66 +305,92 @@ fun MainScreen(
                         onBreakEndAlertChange = { viewModel.setBreakEndAlertType(it) }
                     )
 
-                    // Learning Content Settings
+                    // Eye Care Tips & Online Sync Section
                     GlassCard(modifier = Modifier.fillMaxWidth()) {
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            Text(
-                                text = stringResource(R.string.learning_content_title),
-                                style = MaterialTheme.typography.titleMedium
-                            )
-
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        viewModel.setVocabularyEnabled(!uiState.settings.vocabularyEnabled)
-                                    },
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Checkbox(
-                                    checked = uiState.settings.vocabularyEnabled,
-                                    onCheckedChange = { enabled ->
-                                        viewModel.setVocabularyEnabled(enabled)
-                                    },
-                                    colors = CheckboxDefaults.colors(
-                                        checkedColor = MaterialTheme.colorScheme.primary
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text(text = "💡", style = MaterialTheme.typography.titleMedium)
+                                    Text(
+                                        text = stringResource(R.string.eye_care_tips_title),
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold
                                     )
-                                )
-                                Text(
-                                    text = stringResource(R.string.vocabulary_english),
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    modifier = Modifier.weight(1f)
-                                )
+                                }
+
+                                FilledTonalButton(
+                                    onClick = { viewModel.syncTips() },
+                                    enabled = !uiState.isSyncingTips,
+                                    contentPadding = PaddingValues(
+                                        horizontal = 12.dp,
+                                        vertical = 6.dp
+                                    ),
+                                    shape = RoundedCornerShape(12.dp)
+                                ) {
+                                    if (uiState.isSyncingTips) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.size(16.dp),
+                                            strokeWidth = 2.dp
+                                        )
+                                    } else {
+                                        Text(
+                                            text = stringResource(R.string.eye_care_tips_sync_now),
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    }
+                                }
                             }
-                        }
-                    }
 
-                    // Learned Cards Section
-                    GlassCard(modifier = Modifier.fillMaxWidth()) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.learned_cards_title),
-                                style = MaterialTheme.typography.titleMedium
-                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.eye_care_tips_count, uiState.tipsCount),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = TextSecondary
+                                )
 
-                            Text(
-                                text = stringResource(R.string.learned_cards_count, uiState.savedCards.size),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = TextSecondary
-                            )
+                                uiState.syncMessage?.let { msg ->
+                                    Text(
+                                        text = msg,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
 
-                            Text(
-                                text = stringResource(R.string.learned_cards_description),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = TextSecondary,
-                                modifier = Modifier.clickable { showLearnedCards = true }
-                            )
+                            uiState.randomTip?.let { tip ->
+                                ContentCardView(
+                                    card = tip,
+                                    surfaceColor = Color.Transparent
+                                )
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    TextButton(
+                                        onClick = { viewModel.loadRandomTip() }
+                                    ) {
+                                        Text(
+                                            text = "نکته بعدی ↻",
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
 

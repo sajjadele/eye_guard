@@ -23,6 +23,10 @@ data class MainUiState(
     val settings: EyeGuardSettings = EyeGuardSettings(),
     val dailyStats: DailyStats = DailyStats.EMPTY,
     val isLoading: Boolean = true,
+    val tipsCount: Int = 0,
+    val isSyncingTips: Boolean = false,
+    val randomTip: ContentCard? = null,
+    val syncMessage: String? = null,
     val savedCards: List<ContentCard> = emptyList()
 )
 
@@ -47,7 +51,15 @@ class EyeGuardViewModel(
             .launchIn(viewModelScope)
 
         refreshDailyStats()
-        refreshSavedCards()
+
+        contentRepository.getTipsCount()
+            .onEach { count ->
+                _uiState.value = _uiState.value.copy(tipsCount = count)
+            }
+            .launchIn(viewModelScope)
+
+        loadRandomTip()
+        syncTips()
     }
 
     fun refreshDailyStats() {
@@ -57,30 +69,29 @@ class EyeGuardViewModel(
         }
     }
 
-    fun refreshSavedCards() {
+    fun loadRandomTip() {
         viewModelScope.launch {
-            contentRepository.getSavedCards().onEach { cards ->
-                _uiState.value = _uiState.value.copy(savedCards = cards)
-            }.launchIn(viewModelScope)
+            val tip = contentRepository.getRandomCard(com.example.eyeguard.domain.model.ContentCategory.EYE_CARE)
+            _uiState.value = _uiState.value.copy(randomTip = tip)
         }
     }
 
-    fun toggleSaveCard(card: ContentCard) {
+    fun syncTips() {
         viewModelScope.launch {
-            contentRepository.updateSavedStatus(card.id, !card.isSaved)
-            refreshSavedCards()
+            _uiState.value = _uiState.value.copy(isSyncingTips = true, syncMessage = null)
+            val result = contentRepository.syncRemoteTips()
+            val message = result.fold(
+                onSuccess = { addedCount ->
+                    if (addedCount > 0) "تعداد $addedCount نکته جدید دریافت شد"
+                    else "نکات سلامت چشم به‌روز هستند"
+                },
+                onFailure = {
+                    "حالت آفلاین (استفاده از نکات محلی)"
+                }
+            )
+            _uiState.value = _uiState.value.copy(isSyncingTips = false, syncMessage = message)
+            loadRandomTip()
         }
-    }
-
-    fun removeSavedCard(cardId: Long) {
-        viewModelScope.launch {
-            contentRepository.updateSavedStatus(cardId, false)
-            refreshSavedCards()
-        }
-    }
-
-    fun setVocabularyEnabled(enabled: Boolean) {
-        update { it.copy(vocabularyEnabled = enabled) }
     }
 
     fun setWorkInterval(minutes: Int) {

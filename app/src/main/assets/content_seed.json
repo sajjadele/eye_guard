@@ -1,411 +1,356 @@
 {
-  "version": 1,
+  "version": 2,
+  "lastUpdated": "2026-09-22",
   "cards": [
     {
       "category": "EYE_CARE",
-      "title": "نکته سلامت چشم",
-      "content": "هنگام کار با صفحه نمایش، به طور منظم پلک بزنید. پلک زدن کمتر می‌تواند باع خشکی چشم شود.",
-      "translation": null,
-      "example": null
-    },
-    {
-      "category": "EYE_CARE",
       "title": "قانون ۲۰-۲۰-۲۰",
-      "content": "هر ۲۰ دقیقه، به مدت ۲۰ ثانیه به نقطه‌ای به فاصله ۲۰ فوت (۶ متر) نگاه کنید.",
+      "content": "هر ۲۰ دقیقه کار با نمایشگر، به مدت ۲۰ ثانیه به نقطه‌ای در فاصله ۶ متری (۲۰ فوت) نگاه کنید.",
       "translation": null,
-      "example": null
+      "example": "تمرین: به دورترین نقطه اتاق، منظره بیرون پنجره یا یک ساختمان دوردست خیره شوید تا عضلات مژگانی چشم کاملاً شل شوند."
     },
     {
       "category": "EYE_CARE",
-      "title": "نکته نور",
-      "content": "از نور طبیعی استفاده کنید و از نور مستقیم صفحه نمایش بکاهید. نور محیط کافی از خستگی چشم جلوگیری می‌کند.",
+      "title": "پلک‌زدن آگاهانه",
+      "content": "هنگام کار با مانیتور، نرخ پلک‌زدن ناخودآگاه تا ۶۰٪ کاهش می‌یابد. به صورت آگاهانه پلک‌های کامل بزنید.",
       "translation": null,
-      "example": null
+      "example": "تمرین: ۱۰ بار به آرامی پلک بزنید و در هر بار، چشم‌ها را به مدت یک ثانیه کاملاً بسته نگه دارید."
     },
     {
       "category": "EYE_CARE",
-      "title": "تمرین چشم",
-      "content": "چشم‌ها را ببندید و ۵ ثانیه فشار دهید، سپس رها کنید. این کار را ۵ بار تکرار کنید تا عضلات چشم شل شوند.",
+      "title": "فاصله استاندارد صفحه نمایش",
+      "content": "مانیتور باید بین ۵۰ تا ۷۰ سانتی‌متر (به اندازه طول یک دست کشیده) از چشمان شما فاصله داشته باشد.",
       "translation": null,
-      "example": null
+      "example": "نکته: اگر برای خواندن نوشته‌ها ناچارید به صفحه نزدیک شوید، به جای آن اندازه فونت سیستم را افزایش دهید."
     },
     {
       "category": "EYE_CARE",
-      "title": "فاصله مناسب",
-      "content": "فاصله مناسب صفحه نمایش از چشم باید حدود ۵۰-۷۰ سانتی‌متر باشد.",
+      "title": "زاویه دید رو به پایین",
+      "content": "لبه بالایی صفحه نمایش باید هم‌سطح یا کمی پایین‌تر از چشم‌ها باشد (زاویه ۱۵ تا ۲۰ درجه رو به پایین).",
       "translation": null,
-      "example": null
+      "example": "علت: این زاویه باعث می‌شود بخش کمتری از سطح کره چشم در معرض هوا و تبخیر اشک قرار گیرد."
     },
     {
       "category": "EYE_CARE",
-      "title": "رطوبت چشم",
-      "content": "در محیط‌های خشک از قطره چشم بدون نسخه استفاده کنید تا چشم‌ها مرطوب بمانند.",
+      "title": "هماهنگی روشنایی صفحه و محیط",
+      "content": "روشنایی صفحه نمایش را متناسب با نور اتاق تنظیم کنید؛ صفحه نباید مانند یک لامپ پرنور یا محیطی تیره به نظر برسد.",
       "translation": null,
-      "example": null
+      "example": "تمرین: سفیدی یک صفحه متنی باید تقریباً شبیه به یک برگه کاغذ سفید در نور همان اتاق دیده شود."
     },
     {
       "category": "EYE_CARE",
-      "title": "موقعیت صفحه نمایش",
-      "content": "صفحه نمایش باید کمی پایین‌تر از سطح چشم باشد تا فشار کمتری به چشم‌ها وارد شود.",
+      "title": "جلوگیری از بازتاب نور (Glare)",
+      "content": "مانیتور را به گونه‌ای قرار دهید که نور پنجره یا لامپ مستقیماً روی صفحه منعکس نشود.",
       "translation": null,
-      "example": null
+      "example": "راهکار: قرار دادن صفحه به صورت عمود بر پنجره و استفاده از پرده‌های کرکره‌ای انعکاس را از بین می‌برد."
     },
     {
       "category": "EYE_CARE",
-      "title": "عینک آفتابی",
-      "content": "در بیرون از منزل از عینک آفتابی با محافظت UV استفاده کنید تا چشم‌ها در برابر اشعه مضر محافظت شوند.",
+      "title": "ماساژ گرم پالمینگ (Palming)",
+      "content": "کف دو دست را به هم بمالید تا کاملاً گرم شوند، سپس گودی دست‌ها را بدون فشار روی چشمان بسته بگذارید.",
       "translation": null,
-      "example": null
+      "example": "تمرین: ۳۰ ثانیه در تاریکی و گرمای دست‌ها آرام بمانید و چند نفس عمیق بکشید."
     },
     {
       "category": "EYE_CARE",
-      "title": "تغذیه سالم",
-      "content": "مصرف غذاهای سرشار از ویتامین A، C و E به سلامت چشم کمک می‌کند. هویج، اسفناج و ماهی مفید هستند.",
+      "title": "فیلتر نور آبی در عصر و شب",
+      "content": "نور آبی با طول موج کوتاه خستگی چشم را تشدید کرده و ترشح ملاتونین (هورمون خواب) را مختل می‌کند.",
       "translation": null,
-      "example": null
+      "example": "راهکار: حالت Night Light یا فیلتر زرد رنگ نمایشگر را برای ساعات پایانی روز فعال کنید."
     },
     {
       "category": "EYE_CARE",
-      "title": "استراحت کوتاه",
-      "content": "هر ساعت یک بار به مدت ۵ دقیقه از صفحه نمایش فاصله بگیرید و به اطراف نگاه کنید.",
+      "title": "تمرین عدد ۸ انگلیسی",
+      "content": "در فضای خالی روبرویتان، یک عدد ۸ افقی (علامت بی‌نهایت) در فاصله ۳ متری مجسم کنید.",
       "translation": null,
-      "example": null
+      "example": "تمرین: چشمانتان را به آرامی در امتداد این مسیر فرضی حرکت دهید؛ ۳ بار در جهت ساعت‌گرد و ۳ بار خلاف آن."
     },
     {
       "category": "EYE_CARE",
-      "title": "نور آبی",
-      "content": "نور آبی صفحه نمایش می‌تواند خواب را مختل کند. شب‌ها از حالت شب استفاده کنید.",
+      "title": "تغییر کانون دید (نزدیک به دور)",
+      "content": "انگشت شست خود را در فاصله ۲۵ سانتی‌متری صورت بگیرید؛ ۵ ثانیه به آن و ۵ ثانیه به نقطه‌ای در دوردست بنگرید.",
       "translation": null,
-      "example": null
+      "example": "این تمرین انعطاف‌پذیری و قدرت فوکوس مجدد عدسی چشم را پس از ساعت‌ها کار حفظ می‌کند."
     },
     {
       "category": "EYE_CARE",
-      "title": "پلک زدن عمدی",
-      "content": "هنگام کار با کامپیوتر، پلک زدن را فراموش نکنید. میانگین پلک زدن از ۱۵ به ۵ بار در دقیقه کاهش می‌یابد.",
+      "title": "نوشیدن منظم آب",
+      "content": "کم‌آبی بدن سریعاً بر کیفیت لایه اشکی تأثیر گذاشته و سبب خشکی و سوزش قرنیه می‌شود.",
       "translation": null,
-      "example": null
+      "example": "توصیه: همواره یک قمقمه یا لیوان آب کنار میز کار خود داشته باشید و هر ساعت چند جرعه بنوشید."
     },
     {
       "category": "EYE_CARE",
-      "title": "کیفیت صفحه نمایش",
-      "content": "از صفحه نمایش‌های با کیفیت بالا و بدون لرزش استفاده کنید تا فشار کمتری به چشم‌ها وارد شود.",
+      "title": "جهت باد کولر و فن",
+      "content": "جریان مستقیم باد پنکه، کولر یا سیستم‌های تهویه مطبوع اشک چشم را بسیار سریع تبخیر می‌کند.",
       "translation": null,
-      "example": null
+      "example": "دریچه‌های خروجی باد را طوری تنظیم کنید که مستقیماً به سمت صورت شما هدایت نشوند."
     },
     {
       "category": "EYE_CARE",
-      "title": "محیط کار",
-      "content": "میز کار باید به گونه‌ای تنظیم شود که صفحه نمایش در زاویه مناسبی قرار گیرد و نور مستقیم روی آن نتابد.",
+      "title": "پاکیزگی نمایشگر",
+      "content": "لکه‌ها و گرد و غبار روی صفحه با ایجاد پراکندگی نور، چشمان شما را مجبور به تلاش دوچندان می‌کنند.",
       "translation": null,
-      "example": null
+      "example": "هفته‌ای دو بار با یک دستمال میکروفیبر نرم و مخصوص مانیتور خود را تمیز کنید."
     },
     {
       "category": "EYE_CARE",
-      "title": "چشم خشک",
-      "content": "اگر احساس خشکی یا سوزش در چشم دارید، چند بار پلک بزنید یا از قطره چشم استفاده کنید.",
+      "title": "تغذیه دوست‌دار چشم",
+      "content": "سبزیجات با برگ سبز تیره (اسفناج، بروکلی) سرشار از لوتئین و زآگزانتین هستند که مانند ضدآفتاب طبیعی برای شبکیه عمل می‌کنند.",
       "translation": null,
-      "example": null
+      "example": "هویج، فلفل دلمه‌ای، کدو حلوایی و تخم‌مرغ نیز به سلامت سلول‌های گیرنده نور کمک شایانی می‌کنند."
     },
     {
       "category": "EYE_CARE",
-      "title": "ورزش چشم",
-      "content": "چشم‌ها را به آرامی به بالا، پایین، چپ و راست حرکت دهید. این کار به تقویت عضلات چشم کمک می‌کند.",
+      "title": "اسیدهای چرب امگا ۳",
+      "content": "امگا ۳ کیفیت ترشح چربی غدد میبومین لبه پلک را بالا برده و از ناپایداری لایه اشکی جلوگیری می‌کند.",
       "translation": null,
-      "example": null
+      "example": "گردو، دانه کتان، دانه چیا و ماهی سالمون منابع عالی امگا ۳ برای پیشگیری از خشکی چشم هستند."
     },
     {
       "category": "EYE_CARE",
-      "title": "خواب کافی",
-      "content": "خواب کافی (۷-۸ ساعت) برای سلامت چشم ضروری است. چشم‌ها در خواب بازسازی می‌شوند.",
+      "title": "حرکت چشم به چهار جهت",
+      "content": "سر خود را کاملاً صاف و بی‌حرکت نگه دارید؛ به آرامی به بالا، پایین، چپ و راست نگاه کنید.",
       "translation": null,
-      "example": null
+      "example": "در هر موقعیت ۲ ثانیه مکث کنید تا کشش ملایمی در عضلات حرکتی کره چشم احساس شود."
     },
     {
       "category": "EYE_CARE",
-      "title": "عینک طبی",
-      "content": "اگر نیاز به عینک دارید، حتماً از عینک مناسب استفاده کنید. استفاده نکردن از عینک باع خستگی چشم می‌شود.",
+      "title": "پلک‌زدن فشاری (Squeeze Blink)",
+      "content": "پلک‌ها را به مدت ۲ ثانیه محکم به هم بفشارید، سپس رها کرده و چشمانتان را باز کنید.",
       "translation": null,
-      "example": null
+      "example": "این حرکت غدد چربی لبه پلک را ترغیب به ترشح لایه لیپیدی محافظ اشک می‌کند."
     },
     {
       "category": "EYE_CARE",
-      "title": "آب بنوشید",
-      "content": "نوشیدن آب کافی به حفظ رطوبت چشم‌ها کمک می‌کند. روزانه حداقل ۸ لیوان آب بنوشید.",
+      "title": "پرهیز از تاریکی مطلق",
+      "content": "استفاده از گوشی یا لپ‌تاپ در تاریکی اتاق به دلیل اختلاف شدید کنتراست خستگی زیادی ایجاد می‌کند.",
       "translation": null,
-      "example": null
+      "example": "حتی یک آباژور کوچک یا نور مخفی ملایم در اتاق مانع از وارد آمدن شوک نوری به چشم می‌شود."
     },
     {
       "category": "EYE_CARE",
-      "title": "معاینه چشم",
-      "content": "هر سال یک بار معاینه چشم انجام دهید تا مشکلات احتمالی زودتر شناسایی شوند.",
+      "title": "نور پشت مانیتور (Bias Light)",
+      "content": "تاباندن یک نور ملایم به دیوار پشت مانیتور، سازگاری دید محیطی مردمک را آسان‌تر می‌کند.",
       "translation": null,
-      "example": null
+      "example": "نوارهای ال‌ای‌دی با نور گرم پشت نمایشگر فشار ناشی از کار شبانه را به شدت کاهش می‌دهند."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Serene",
-      "content": "آرام، دلنشین",
-      "translation": "Used to describe a peaceful and calm situation.",
-      "example": "A serene morning can improve your mood."
+      "category": "EYE_CARE",
+      "title": "نرمش گردن و شانه‌ها",
+      "content": "اسپاسم و انقباض عضلات گردن خون‌رسانی مطلوب به کاسه چشم را محدود می‌کند.",
+      "translation": null,
+      "example": "تمرین: چانه را به آرامی به سمت سینه ببرید و سر را به آرامی به چپ و راست بچرخانید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Ephemeral",
-      "content": "زودگذر، گذرای",
-      "translation": "Lasting for a very short time.",
-      "example": "The ephemeral beauty of cherry blossoms."
+      "category": "EYE_CARE",
+      "title": "تنظیم اندازه متون",
+      "content": "تنگ کردن چشم‌ها برای خواندن فونت‌های ریز، باعث تنش مداوم عضلات صورت و سردرد خفیف می‌شود.",
+      "translation": null,
+      "example": "از بزرگ‌نمایی صفحه (Ctrl + Plus در مرورگر یا افزایش Font Scale در اندروید) استفاده کنید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Resilient",
-      "content": "مقاوم، سازگار",
-      "translation": "Able to recover quickly from difficulties.",
-      "example": "She is resilient and always bounces back."
+      "category": "EYE_CARE",
+      "title": "رطوبت‌ساز محیط (بخور سرد)",
+      "content": "در فصول سرد سال با روشن بودن وسایل گرمایشی، رطوبت هوا به زیر ۳۰٪ افت می‌کند.",
+      "translation": null,
+      "example": "استفاده از یک دستگاه بخور سرد در اتاق کار مانع از تبخیر سریع رطوبت قرنیه می‌شود."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Eloquent",
-      "content": "فصیح، گویا",
-      "translation": "Fluent and persuasive in speaking or writing.",
-      "example": "He gave an eloquent speech about peace."
+      "category": "EYE_CARE",
+      "title": "استراحت‌های کوتاه ولی مکرر",
+      "content": "تحقیقات ارگونومی ثابت کرده که وقفه‌های کوتاه ۳۰ ثانیه‌ای هر ۲۰ دقیقه، بسیار کارآمدتر از استراحت طولانی پس از ساعت‌ها کار است.",
+      "translation": null,
+      "example": "اجازه دهید اپلیکیشن محافظ چشم ریتم کاری شما را تنظیم کند."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Ubiquitous",
-      "content": "همه‌جا حاضر، فراگیر",
-      "translation": "Present, appearing, or found everywhere.",
-      "example": "Smartphones have become ubiquitous in modern life."
+      "category": "EYE_CARE",
+      "title": "چرخاندن دایره‌ای چشم‌ها",
+      "content": "چشمان خود را ببندید و تصور کنید به ساعت دیواری بزرگی نگاه می‌کنید.",
+      "translation": null,
+      "example": "کره‌های چشم را به آرامی از ساعت ۱۲ در جهت ساعت‌گرد بچرخانید و سپس خلاف آن تکرار کنید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Pragmatic",
-      "content": "عملگرا، واقع‌بین",
-      "translation": "Dealing with things sensibly and realistically.",
-      "example": "We need a pragmatic approach to this problem."
+      "category": "EYE_CARE",
+      "title": "کمپرس گرم برای پلک‌ها",
+      "content": "قرار دادن یک حوله نخی تمیز و آغشته به آب گرم روی پلک‌های بسته، چربی‌های سفت‌شده غدد پلک را روان می‌کند.",
+      "translation": null,
+      "example": "هفته‌ای دو بار به مدت ۵ دقیقه قبل از خواب این کار را برای آرامش چشم انجام دهید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Meticulous",
-      "content": "دقیق، وسواسی",
-      "translation": "Showing great attention to detail.",
-      "example": "She is meticulous about her work."
+      "category": "EYE_CARE",
+      "title": "عینک آفتابی با محافظت UV400",
+      "content": "پرتوهای فرابنفش خورشید حتی در روزهای ابری به عدسی و شبکیه چشم نفوذ می‌کنند.",
+      "translation": null,
+      "example": "هنگام خروج از منزل از عینک آفتابی استاندارد با برچسب UV400 یا پلاریزه استفاده کنید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Eloquent",
-      "content": "فصیح، رسای",
-      "translation": "Clearly expressing or indicating something.",
-      "example": "The painting is an eloquent expression of grief."
+      "category": "EYE_CARE",
+      "title": "پرهیز از مالیدن شدید چشم‌ها",
+      "content": "مالش محکم چشم‌ها خطر آسیب به الیاف کلاژن قرنیه و نازک شدن آن (کراتوکونوس) را افزایش می‌دهد.",
+      "translation": null,
+      "example": "در صورت خارش یا وجود گرد و غبار، از شستشوی ملایم با آب ولرم یا قطره اشک مصنوعی استفاده کنید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Candid",
-      "content": "صادق، صریح",
-      "translation": "Truthful and straightforward; frank.",
-      "example": "He gave a candid assessment of the situation."
+      "category": "EYE_CARE",
+      "title": "نرخ نوسازی تصویر (Refresh Rate)",
+      "content": "اگر نمایشگر شما قابلیت تنظیم نرخ نوسازی دارد، آن را روی بالاترین حد ممکن بگذارید.",
+      "translation": null,
+      "example": "حرکت روان‌تر صفحات (مانند ۹۰ یا ۱۲۰ هرتز) استرس بصری مغز را در خواندن متون کاهش می‌دهد."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Adept",
-      "content": "ماهر، زبردست",
-      "translation": "Very skilled or proficient at something.",
-      "example": "She is adept at solving complex problems."
+      "category": "EYE_CARE",
+      "title": "تنظیم کنتراست مناسب",
+      "content": "کنتراست خیلی کم شما را وادار به تمرکز بیش از حد می‌کند و کنتراست فوق‌العاده تند چشم را خسته می‌سازد.",
+      "translation": null,
+      "example": "تم‌های تاریک ملایم (دارک مود با رنگ خاکستری تیره یا آبسیدین) برای کار شبانه ایده‌آل هستند."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Benevolent",
-      "content": "نیکوکار، مهربان",
-      "translation": "Well-meaning and kindly.",
-      "example": "The benevolent organization helps the poor."
+      "category": "EYE_CARE",
+      "title": "خواب کافی و احیای لایه اشکی",
+      "content": "در طول خواب عمیق شبانه، قرنیه چشم اکسیژن و مواد مغذی مورد نیاز خود را بازسازی می‌کند.",
+      "translation": null,
+      "example": "حداقل ۷ تا ۸ ساعت خواب شبانه باکیفیت برای حفظ بینایی شفاف و درخشان ضروری است."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Concise",
-      "content": "مختصر، موجز",
-      "translation": "Giving much information in few words.",
-      "example": "Please write a concise summary."
+      "category": "EYE_CARE",
+      "title": "نفس عمیق شکمی حین استراحت",
+      "content": "هنگام تمرکز روی کدنویسی یا مطالعه، تنفس اغلب سطحی می‌شود.",
+      "translation": null,
+      "example": "در زمان زنگ استراحت، با ۳ دم عمیق شکمی اکسیژن‌رسانی به مغز و عروق چشمی را تقویت کنید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Diligent",
-      "content": "پرتلاش، کوشا",
-      "translation": "Having or showing care in one's work.",
-      "example": "He is a diligent student who always studies hard."
+      "category": "EYE_CARE",
+      "title": "عدم استفاده مداوم از لنز تماسی",
+      "content": "لنزهای تماسی تبادل اکسیژن با قرنیه را کاهش می‌دهند و پشت مانیتور خشکی چشم را تشدید می‌کنند.",
+      "translation": null,
+      "example": "در روزهایی که کار فشرده با کامپیوتر دارید، ترجیحاً عینک را جایگزین لنز تماسی کنید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Exemplary",
-      "content": "نمونه، سرمشق",
-      "translation": "Serving as a desirable model.",
-      "example": "Her exemplary behavior earned her a promotion."
+      "category": "EYE_CARE",
+      "title": "معاینه سالیانه توسط اپتومتریست",
+      "content": "ضعیف شدن چشم یا ایجاد آستیگماتیسم تدریجی است و فرد متوجه تلاش مضاعف چشم برای جبران آن نمی‌شود.",
+      "translation": null,
+      "example": "سالانه یک بار با معاینه ساده اپتومتری از سلامت دقیق شماره چشم خود مطمئن شوید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Flourish",
-      "content": "شکوفا شدن، رشد کردن",
-      "translation": "To grow or develop in a healthy way.",
-      "example": "The business flourished during the summer."
+      "category": "EYE_CARE",
+      "title": "چای بابونه برای تسکین خستگی",
+      "content": "کمپرس سرد تی‌بگ خنک‌شده بابونه بر روی پلک‌ها التهاب و سنگینی چشم پس از یک روز طولانی را برطرف می‌کند.",
+      "translation": null,
+      "example": "ترکیبات فلاونوئیدی بابونه به عنوان یک ضدالتهاب ملایم طبیعی عمل می‌کنند."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Gratitude",
-      "content": "قدردانی، شکرگزاری",
-      "translation": "The quality of being thankful.",
-      "example": "She expressed her gratitude for the help."
+      "category": "EYE_CARE",
+      "title": "تمرین نگاه به افق بی‌نهایت",
+      "content": "عدسی چشم انسان برای دیدن فاصله‌های دور در وضعیت کاملاً استراحت و بدون انقباض قرار دارد.",
+      "translation": null,
+      "example": "هر روز مدتی را به تماشای کوه‌ها، آسمان یا درختان دوردست اختصاص دهید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Harmonious",
-      "content": "هماهنگ، موزون",
-      "translation": "Forming a pleasing and consistent whole.",
-      "example": "They live in a harmonious neighborhood."
+      "category": "EYE_CARE",
+      "title": "تنظیم وایت‌بالانس مانیتور به سمت گرمی",
+      "content": "نمایشگرهایی با رنگ سفید بیش از حد سرد (آبی)، اثر خستگی‌زای بیشتری دارند.",
+      "translation": null,
+      "example": "دمای رنگ مانیتور خود را روی حالت Warm یا استاندارد ۶۵۰۰ کلوین قرار دهید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Innovative",
-      "content": "نوآورانه، خلاقانه",
-      "translation": "Featuring new methods or ideas.",
-      "example": "The company is known for its innovative products."
+      "category": "EYE_CARE",
+      "title": "ارگونومی بدن و زاویه ۹۰ درجه",
+      "content": "وضعیت نامناسب نشستن فشار زیادی بر عصب‌های گردنی مرتبط با بینایی وارد می‌سازد.",
+      "translation": null,
+      "example": "کف پاها باید کاملاً روی زمین باشد و آرنج‌ها زاویه ۹۰ درجه با میز تشکیل دهند."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Jubilant",
-      "content": "شادمان، مسرور",
-      "translation": "Feeling or expressing great happiness.",
-      "example": "The crowd was jubilant after the victory."
+      "category": "EYE_CARE",
+      "title": "ویتامین C و پیشگیری از آب‌مروارید",
+      "content": "ویتامین C مایع زلالیه داخل چشم را تغذیه کرده و از کدورت تدریجی عدسی جلوگیری می‌کند.",
+      "translation": null,
+      "example": "مرکبات، توت‌فرنگی، کیوی و گوجه‌فرنگی منابع طبیعی و در دسترس ویتامین C هستند."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Kindle",
-      "content": "روشن کردن، برانگیختن",
-      "translation": "To light or set on fire; to inspire.",
-      "example": "The teacher tried to kindle their interest in science."
+      "category": "EYE_CARE",
+      "title": "ورزش عضلات چهره",
+      "content": "انقباض مداوم عضلات ابرو و پیشانی هنگام کار فشرده باعث سردردهای فشاری می‌شود.",
+      "translation": null,
+      "example": "ابروها را به سمت بالا بکشید، سپس رها کنید و عضلات اطراف چشم را به آرامی ماساژ دهید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Lucid",
-      "content": "شفاف، روشن",
-      "translation": "Expressed clearly; easy to understand.",
-      "example": "She gave a lucid explanation of the theory."
+      "category": "EYE_CARE",
+      "title": "اشک مصنوعی بدون مواد نگه‌دارنده",
+      "content": "اگر به طور مداوم با خشکی چشم مواجهید، اشک مصنوعی‌های تک‌دوز بهترین گزینه هستند.",
+      "translation": null,
+      "example": "مواد نگه‌دارنده در قطره‌های چندبارمصرف در صورت استفاده طولانی‌مدت ممکن است قرنیه را تحریک کنند."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Mentor",
-      "content": "مربی، راهنما",
-      "translation": "An experienced person who advises others.",
-      "example": "He served as a mentor to young entrepreneurs."
+      "category": "EYE_CARE",
+      "title": "نگاه به نور طبیعی خورشید در آغاز صبح",
+      "content": "قرار گرفتن در معرض نور صبحگاهی تولید دوپامین شبکیه را تنظیم کرده و مانع پیشرفت نزدیک‌بینی می‌شود.",
+      "translation": null,
+      "example": "صبح‌ها چند دقیقه به حیاط یا بالکن بروید و از نور طبیعی روز لذت ببرید (بدون نگاه مستقیم به خورشید)."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Nurture",
-      "content": "پرورش دادن، مراقبت کردن",
-      "translation": "To care for and encourage growth.",
-      "example": "Parents nurture their children with love."
+      "category": "EYE_CARE",
+      "title": "کاهش مصرف کافئین بیش از حد",
+      "content": "مصرف زیاد چای غلیظ یا قهوه به عنوان مدر (ادرارآور) عمل کرده و می‌تواند خشکی لایه مخاطی چشم را تشدید کند.",
+      "translation": null,
+      "example": "در کنار فنجان قهوه، همواره یک لیوان آب برای حفظ تعادل مایعات بنوشید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Optimistic",
-      "content": "خوش‌بین، امیدوار",
-      "translation": "Hopeful about the future.",
-      "example": "She remains optimistic despite the challenges."
+      "category": "EYE_CARE",
+      "title": "تنظیم کنتراست کدهای برنامه‌نویسی",
+      "content": "استفاده از تم‌های کدنویسی با رنگ‌های بیش از حد جیغ یا کنتراست‌های نامتعارف چشم را زودتر خسته می‌کند.",
+      "translation": null,
+      "example": "تم‌های استاندارد با رنگ‌های ملایم پاستلی برای ویرایشگرهای متنی مناسب‌ترین انتخاب هستند."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Proficient",
-      "content": "ماهر، کارآمد",
-      "translation": "Competent or skilled in doing something.",
-      "example": "He is proficient in three languages."
+      "category": "EYE_CARE",
+      "title": "شستشوی لبه مژه‌ها با آب ولرم",
+      "content": "گرد و غبار و چربی اضافه می‌تواند منافذ ظریف غدد پلک را مسدود کرده و موجب گل‌مژه یا خشکی شود.",
+      "translation": null,
+      "example": "هنگام شستشوی صورت، خط رویش مژه‌ها را با نوک انگشتان و آب ولرم به آرامی تمیز کنید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Quintessential",
-      "content": "نمونه عالی، بارز",
-      "translation": "Representing the most perfect example.",
-      "example": "She is the quintessential leader."
+      "category": "EYE_CARE",
+      "title": "پیاده‌روی روزانه در فضای باز",
+      "content": "نگاه کردن مداوم به فواصل کوتاه کمتر از یک متر در محیط بسته، چشم را از حالت طبیعی خارج می‌سازد.",
+      "translation": null,
+      "example": "روزی ۳۰ دقیقه پیاده‌روی به چشم امکان رصد فواصل مختلف و احیای پویایی بینایی را می‌دهد."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Rejuvenate",
-      "content": "جوان کردن، تازه کردن",
-      "translation": "To make young again; to restore.",
-      "example": "A good night's sleep can rejuvenate your body."
+      "category": "EYE_CARE",
+      "title": "زاویه صحیح کیبورد و دستان",
+      "content": "نگاه مدام بین کیبورد و مانیتور با سرعت بالا خستگی فوکوس ایجاد می‌کند.",
+      "translation": null,
+      "example": "تایپ ده‌انگشتی و تسلط بر جایگاه کلیدها نیاز به چرخش مکرر کانون دید چشم را برطرف می‌سازد."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Sustain",
-      "content": "حفظ کردن، نگه داشتن",
-      "translation": "To maintain or support over time.",
-      "example": "We must sustain our efforts to protect the environment."
+      "category": "EYE_CARE",
+      "title": "توجه به علائم هشداردهنده چشم",
+      "content": "دیدن جرقه‌های نوری ناگهانی، تاری دید پایدار، یا احساس مگس‌پران مداوم نیاز به بررسی فوری دارد.",
+      "translation": null,
+      "example": "هرگز تغییرات ناگهانی میدان دید را نادیده نگیرید و بلافاصله به متخصص مراجعه کنید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Tranquil",
-      "content": "آرام، ساکت",
-      "translation": "Free from disturbance; calm.",
-      "example": "The lake was tranquil in the early morning."
+      "category": "EYE_CARE",
+      "title": "تعویض به موقع صفحه محافظ گوشی (گلس)",
+      "content": "گلس‌های ترک‌خورده یا خراشیده باعث شکست نور و انحراف کانون بینایی می‌شوند.",
+      "translation": null,
+      "example": "یک محافظ صفحه مات و باکیفیت بازتاب نور را کم کرده و از فشار بر چشم می‌کاهد."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Unwavering",
-      "content": "ثابت، متزلزل نبودن",
-      "translation": "Steady or resolute; not wavering.",
-      "example": "She has unwavering determination."
+      "category": "EYE_CARE",
+      "title": "کنترل مدت زمان اسکرول شبکه‌های اجتماعی",
+      "content": "جابجایی بسیار سریع تصاویر و متون ریز در شبکه‌های اجتماعی چشم را وادار به فوکوس‌های متوالی و خسته‌کننده می‌کند.",
+      "translation": null,
+      "example": "مدت زمان استفاده بی‌وقفه از شبکه‌های اجتماعی را به فواصل کوتاه محدود کنید."
     },
     {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Vivacious",
-      "content": "شاداب، سرزنده",
-      "translation": "Attractively lively and animated.",
-      "example": "Her vivacious personality lights up the room."
-    },
-    {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Wistful",
-      "content": "دلتنگ، اندیشمند",
-      "translation": "Having or showing a feeling of vague longing.",
-      "example": "He gave a wistful smile when remembering his childhood."
-    },
-    {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Zealous",
-      "content": "پرشور، مشتاق",
-      "translation": "Having great energy or enthusiasm.",
-      "example": "She is zealous about her work."
-    },
-    {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Aesthetic",
-      "content": "زیبایی‌شناختی، هنری",
-      "translation": "Concerned with beauty or the appreciation of beauty.",
-      "example": "The building has great aesthetic appeal."
-    },
-    {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Catalyst",
-      "content": "م催化‌گر، عامل تغییر",
-      "translation": "A person or thing that causes change.",
-      "example": "The event was a catalyst for social change."
-    },
-    {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Dynamic",
-      "content": "پویا، فعال",
-      "translation": "Characterized by constant change or activity.",
-      "example": "She has a dynamic personality."
-    },
-    {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Empathy",
-      "content": "همدلی، درک احساسات",
-      "translation": "The ability to understand others' feelings.",
-      "example": "Show empathy towards those who are suffering."
-    },
-    {
-      "category": "ENGLISH_VOCABULARY",
-      "title": "Focus",
-      "content": "تمرکز، تمرکز کردن",
-      "translation": "The center of interest or activity.",
-      "example": "You need to focus on your goals."
+      "category": "EYE_CARE",
+      "title": "تنظیم صحیح ارتفاع صندلی",
+      "content": "اگر صندلی شما خیلی پایین باشد، مجبور می‌شوید به سمت بالا به مانیتور نگاه کنید که سطح تماس چشم با هوا را افزایش می‌دهد.",
+      "translation": null,
+      "example": "ارتفاع صندلی را طوری تنظیم کنید که زاویه نگاه شما نسبت به مرکز مانیتور رو به پایین باشد."
     }
   ]
 }

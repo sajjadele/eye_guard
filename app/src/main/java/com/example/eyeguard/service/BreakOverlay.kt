@@ -208,8 +208,6 @@ fun BreakOverlayContent(
                             contentCards.forEach { card ->
                                 ContentCardView(
                                     card = card,
-                                    isSaved = card.id in savedCardIds,
-                                    onSave = { onAction(BreakAction.SaveCard(card)) },
                                     surfaceColor = GlassSurfaceStrong
                                 )
                             }

@@ -30,7 +30,6 @@ class SettingsRepositoryImpl(
                             runCatching { BreakEndAlertType.valueOf(name) }.getOrNull()
                         }
                         ?: EyeGuardSettings.DEFAULT_BREAK_END_ALERT,
-                    vocabularyEnabled = prefs[PrefsKeys.VOCABULARY_ENABLED] ?: true,
                     themeMode = prefs[PrefsKeys.THEME_MODE]
                         ?.let { name ->
                             runCatching { AppThemeMode.valueOf(name) }.getOrNull()
@@ -55,7 +54,6 @@ class SettingsRepositoryImpl(
                         runCatching { BreakEndAlertType.valueOf(name) }.getOrNull()
                     }
                     ?: EyeGuardSettings.DEFAULT_BREAK_END_ALERT,
-                vocabularyEnabled = prefs[PrefsKeys.VOCABULARY_ENABLED] ?: true,
                 themeMode = prefs[PrefsKeys.THEME_MODE]
                     ?.let { name ->
                         runCatching { AppThemeMode.valueOf(name) }.getOrNull()
@@ -74,7 +72,6 @@ class SettingsRepositoryImpl(
             prefs[PrefsKeys.WORK_INTERVAL_MINUTES] = updated.workIntervalMinutes
             prefs[PrefsKeys.BREAK_DURATION_SECONDS] = updated.breakDurationSeconds
             prefs[PrefsKeys.BREAK_END_ALERT] = updated.breakEndAlertType.name
-            prefs[PrefsKeys.VOCABULARY_ENABLED] = updated.vocabularyEnabled
             prefs[PrefsKeys.THEME_MODE] = updated.themeMode.name
         }
     }
