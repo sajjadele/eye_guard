@@ -1,0 +1,94 @@
+name: Build & Release EyeGuard APK
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Publish as GitHub Release'
+        required: true
+        type: boolean
+        default: true
+      release_version:
+        description: 'Release version (e.g. v1.0.0)'
+        required: false
+        default: 'v1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Grant Execute Permission to Gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build Release APK
+        run: ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: Prepare APK Asset
+        id: apk_asset
+        run: |
+          VERSION="${{ github.ref_name }}"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.release_version }}"
+          fi
+          if [[ -z "$VERSION" || "$VERSION" == "main" ]]; then
+            VERSION="v1.0.0"
+          fi
+          
+          mkdir -p dist
+          cp app/build/outputs/apk/release/app-release.apk dist/EyeGuard-${VERSION}.apk
+          echo "apk_path=dist/EyeGuard-${VERSION}.apk" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Upload APK as Workflow Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: EyeGuard-${{ steps.apk_asset.outputs.version }}
+          path: ${{ steps.apk_asset.outputs.apk_path }}
+          retention-days: 14
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && github.event.inputs.create_release == 'true')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.apk_asset.outputs.version }}
+          name: "EyeGuard ${{ steps.apk_asset.outputs.version }}"
+          body: |
+            ## 👁️ EyeGuard Android Release (${{ steps.apk_asset.outputs.version }})
+
+            ### What's New:
+            - Offline-first background eye protection service.
+            - Configurable interval reminders and gentle visual break overlays.
+            - Low battery and system impact.
+
+            ### Installation:
+            1. Download `EyeGuard-${{ steps.apk_asset.outputs.version }}.apk` below on your Android device.
+            2. Tap to install (enable "Install from unknown sources" if prompted).
+            3. Grant the overlay permission and start protecting your eyes!
+          files: ${{ steps.apk_asset.outputs.apk_path }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

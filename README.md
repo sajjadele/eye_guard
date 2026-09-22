@@ -1,4 +1,17 @@
+<p align="center">
+  <img src="icon.png" width="96" alt="EyeGuard Logo" />
+</p>
+
 # EyeGuard
+
+<p>
+  <a href="https://github.com/sajjadele/eye_guard/releases/latest">
+    <img src="https://img.shields.io/github/v/release/sajjadele/eye_guard?label=Download%20APK&color=brightgreen&logo=android" alt="Download APK" />
+  </a>
+  <img src="https://img.shields.io/badge/Platform-Android%207.0%2B-3DDC84?logo=android&logoColor=white" />
+  <img src="https://img.shields.io/badge/Privacy-100%25%20Offline-success" />
+  <img src="https://img.shields.io/badge/License-MIT-blue" />
+</p>
 
 EyeGuard is an offline-first Android app that reminds users to rest their eyes during long phone usage.
 
