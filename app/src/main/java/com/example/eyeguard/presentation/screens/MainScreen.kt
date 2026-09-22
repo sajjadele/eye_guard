@@ -399,7 +399,6 @@ fun MainScreen(
             }
         }
     }
-}
 
 private fun notificationPermissionGranted(context: Context): Boolean {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
