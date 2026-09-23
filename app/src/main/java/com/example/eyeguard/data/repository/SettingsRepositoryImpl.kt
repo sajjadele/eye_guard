@@ -34,7 +34,8 @@ class SettingsRepositoryImpl(
                         ?.let { name ->
                             runCatching { AppThemeMode.valueOf(name) }.getOrNull()
                         }
-                        ?: AppThemeMode.DARK
+                        ?: AppThemeMode.DARK,
+                    languageCode = prefs[PrefsKeys.LANGUAGE_CODE] ?: EyeGuardSettings.DEFAULT_LANGUAGE
                 )
             }
             .catch {
@@ -58,7 +59,8 @@ class SettingsRepositoryImpl(
                     ?.let { name ->
                         runCatching { AppThemeMode.valueOf(name) }.getOrNull()
                     }
-                    ?: AppThemeMode.DARK
+                    ?: AppThemeMode.DARK,
+                languageCode = prefs[PrefsKeys.LANGUAGE_CODE] ?: EyeGuardSettings.DEFAULT_LANGUAGE
             )
 
             val updated = transform(current).let {
@@ -73,6 +75,7 @@ class SettingsRepositoryImpl(
             prefs[PrefsKeys.BREAK_DURATION_SECONDS] = updated.breakDurationSeconds
             prefs[PrefsKeys.BREAK_END_ALERT] = updated.breakEndAlertType.name
             prefs[PrefsKeys.THEME_MODE] = updated.themeMode.name
+            prefs[PrefsKeys.LANGUAGE_CODE] = updated.languageCode
         }
     }
 }

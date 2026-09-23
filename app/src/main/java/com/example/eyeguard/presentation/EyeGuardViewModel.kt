@@ -80,18 +80,29 @@ class EyeGuardViewModel(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isSyncingTips = true, syncMessage = null)
             val result = contentRepository.syncRemoteTips()
+            val isPersian = _uiState.value.settings.languageCode == "fa"
             val message = result.fold(
                 onSuccess = { addedCount ->
-                    if (addedCount > 0) "تعداد $addedCount نکته جدید دریافت شد"
-                    else "نکات سلامت چشم به‌روز هستند"
+                    if (addedCount > 0) {
+                        if (isPersian) "تعداد $addedCount نکته جدید دریافت شد"
+                        else "$addedCount new tips received"
+                    } else {
+                        if (isPersian) "نکات سلامت چشم به‌روز هستند"
+                        else "Tips are up-to-date"
+                    }
                 },
                 onFailure = {
-                    "حالت آفلاین (استفاده از نکات محلی)"
+                    if (isPersian) "حالت آفلاین (استفاده از نکات محلی)"
+                    else "Offline mode (local tips)"
                 }
             )
             _uiState.value = _uiState.value.copy(isSyncingTips = false, syncMessage = message)
             loadRandomTip()
         }
+    }
+
+    fun setLanguage(languageCode: String) {
+        update { it.copy(languageCode = languageCode) }
     }
 
     fun setWorkInterval(minutes: Int) {

@@ -92,4 +92,15 @@
     <string name="eye_care_tips_synced">Tips updated successfully</string>
     <string name="eye_care_tips_sync_offline">Offline mode (local tips)</string>
     <string name="eye_care_tip">Eye Care Tip</string>
+    <string name="next_tip">Next Tip ↻</string>
+    <string name="sync_success_count">%1$d new tips received</string>
+
+    <!-- Theme & Language Settings -->
+    <string name="theme_night">Night</string>
+    <string name="theme_day">Day</string>
+    <string name="language_settings_title">App Language</string>
+    <string name="language_settings_subtitle">Select your preferred language</string>
+    <string name="language_persian">فارسی (Persian)</string>
+    <string name="language_english">English</string>
+    <string name="dialog_close">Close</string>
 </resources>

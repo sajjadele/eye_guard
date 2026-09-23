@@ -92,4 +92,15 @@
     <string name="eye_care_tips_synced">نکات با موفقیت به‌روزرسانی شدند</string>
     <string name="eye_care_tips_sync_offline">حالت آفلاین (استفاده از نکات محلی)</string>
     <string name="eye_care_tip">نکته سلامت چشم</string>
+    <string name="next_tip">نکته بعدی ↻</string>
+    <string name="sync_success_count">تعداد %1$d نکته جدید دریافت شد</string>
+
+    <!-- Theme & Language Settings -->
+    <string name="theme_night">شب</string>
+    <string name="theme_day">روز</string>
+    <string name="language_settings_title">زبان برنامه</string>
+    <string name="language_settings_subtitle">زبان مورد نظر خود را انتخاب کنید</string>
+    <string name="language_persian">فارسی</string>
+    <string name="language_english">English (انگلیسی)</string>
+    <string name="dialog_close">بستن</string>
 </resources>

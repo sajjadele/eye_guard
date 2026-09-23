@@ -183,7 +183,9 @@ fun MainScreen(
                         HeroSection(
                             isProtectionActive = isRunning,
                             themeMode = uiState.settings.themeMode,
-                            onToggleTheme = { viewModel.toggleTheme() }
+                            currentLanguage = uiState.settings.languageCode,
+                            onToggleTheme = { viewModel.toggleTheme() },
+                            onSelectLanguage = { viewModel.setLanguage(it) }
                         )
 
                     StatsCard(
@@ -385,7 +387,7 @@ fun MainScreen(
                                         onClick = { viewModel.loadRandomTip() }
                                     ) {
                                         Text(
-                                            text = "نکته بعدی ↻",
+                                            text = stringResource(R.string.next_tip),
                                             style = MaterialTheme.typography.labelMedium
                                         )
                                     }

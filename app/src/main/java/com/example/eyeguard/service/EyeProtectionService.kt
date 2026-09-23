@@ -19,17 +19,24 @@ import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
+import android.content.res.Configuration
+import java.util.Locale
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationCompat
@@ -98,6 +105,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
     private var breakJob: Job? = null
     private var breakWakeLock: PowerManager.WakeLock? = null
     private var currentBreakEventId: Long = 0L
+    private var currentLanguageCode: String = "fa"
 
     private val savedStateRegistryController = SavedStateRegistryController.create(this@EyeProtectionService)
 
@@ -109,6 +117,13 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
         super.onCreate()
         createNotificationChannel()
         savedStateRegistryController.performRestore(null)
+
+        lifecycleScope.launch {
+            repository.settings.collect { settings ->
+                currentLanguageCode = settings.languageCode
+                updateForegroundNotification(settings.languageCode)
+            }
+        }
     }
 
     override fun onStartCommand(
@@ -166,7 +181,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
                     val settings = repository.settings.first()
 
                     if (settings.enabled) {
-                        showBreakOverlay(settings.breakDurationSeconds)
+                        showBreakOverlay(settings.breakDurationSeconds, settings.languageCode)
                     } else {
                         stopProtection()
                     }
@@ -181,7 +196,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
 
                     if (settings.enabled) {
                         Log.d(TAG, "Showing reminder break overlay")
-                        showBreakOverlay(settings.breakDurationSeconds, isReminder = true)
+                        showBreakOverlay(settings.breakDurationSeconds, settings.languageCode, isReminder = true)
                     } else {
                         stopProtection()
                     }
@@ -219,19 +234,37 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
         super.onDestroy()
     }
 
+    private fun getLocalizedContext(languageCode: String = currentLanguageCode): Context {
+        val targetLocale = if (languageCode == "en") Locale.ENGLISH else Locale("fa")
+        val config = Configuration(resources.configuration).apply {
+            setLocale(targetLocale)
+            setLayoutDirection(targetLocale)
+        }
+        return createConfigurationContext(config)
+    }
+
+    private fun updateForegroundNotification(languageCode: String) {
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        try {
+            notificationManager.notify(NOTIFICATION_ID, buildNotification(languageCode))
+        } catch (_: Throwable) {
+            // Ignore notification update errors
+        }
+    }
+
     private fun startForegroundWithNotification() {
         try {
             ServiceCompat.startForeground(
                 this,
                 NOTIFICATION_ID,
-                buildNotification(),
+                buildNotification(currentLanguageCode),
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
             )
         } catch (throwable: Throwable) {
             try {
                 startForeground(
                     NOTIFICATION_ID,
-                    buildNotification()
+                    buildNotification(currentLanguageCode)
                 )
             } catch (_: Throwable) {
                 // The app should not crash if notification cannot be shown.
@@ -239,7 +272,9 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
         }
     }
 
-    private fun buildNotification(): Notification {
+    private fun buildNotification(languageCode: String = currentLanguageCode): Notification {
+        val localizedContext = getLocalizedContext(languageCode)
+
         val openIntent = Intent(this, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         }
@@ -263,13 +298,13 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_eye)
-            .setContentTitle(getString(R.string.notification_title))
-            .setContentText(getString(R.string.notification_text))
+            .setContentTitle(localizedContext.getString(R.string.notification_title))
+            .setContentText(localizedContext.getString(R.string.notification_text))
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setContentIntent(contentIntent)
-            .addAction(0, getString(R.string.notification_stop), stopPendingIntent)
+            .addAction(0, localizedContext.getString(R.string.notification_stop), stopPendingIntent)
             .build()
     }
 
@@ -366,9 +401,10 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
             )
         } catch (throwable: Throwable) {
             Log.e(TAG, "Failed to schedule break alarm", throwable)
+            val locCtx = getLocalizedContext(currentLanguageCode)
             showErrorNotification(
-                getString(R.string.error_overlay_failed_title),
-                getString(R.string.error_overlay_failed)
+                locCtx.getString(R.string.error_overlay_failed_title),
+                locCtx.getString(R.string.error_overlay_failed)
             )
             return
         }
@@ -396,7 +432,11 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
         pendingIntent.cancel()
     }
 
-    private fun showBreakOverlay(breakDurationSeconds: Int, isReminder: Boolean = false) {
+    private fun showBreakOverlay(
+        breakDurationSeconds: Int,
+        languageCode: String = currentLanguageCode,
+        isReminder: Boolean = false
+    ) {
         if (overlayView != null) {
             Log.w(TAG, "Overlay already present; ignoring showBreakOverlay")
             return
@@ -405,11 +445,13 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
         val canDraw = Settings.canDrawOverlays(this)
         Log.d(TAG, "canDrawOverlays() = $canDraw")
 
+        val localizedContext = getLocalizedContext(languageCode)
+
         if (!canDraw) {
             Log.e(TAG, "Overlay failed: overlay permission not granted")
             showErrorNotification(
-                getString(R.string.error_overlay_missing_permission_title),
-                getString(R.string.error_overlay_missing_permission)
+                localizedContext.getString(R.string.error_overlay_missing_permission_title),
+                localizedContext.getString(R.string.error_overlay_missing_permission)
             )
             rescheduleAfterFailure()
             return
@@ -433,33 +475,42 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
             ViewCompositionStrategy.DisposeOnDetachedFromWindow
         )
 
+        val isEn = languageCode == "en"
+        val layoutDirection = if (isEn) LayoutDirection.Ltr else LayoutDirection.Rtl
+
         composeView.setContent {
-            EyeGuardTheme {
-                BreakOverlayContent(
-                    remainingSeconds = remainingSeconds.collectAsState().value,
-                    totalBreakDuration = breakDurationSeconds,
-                    finished = finished.collectAsState().value,
-                    onAction = { action ->
-                        when (action) {
-                            BreakAction.Continue -> handleContinue()
-                            is BreakAction.SaveCard -> {
-                                lifecycleScope.launch {
-                                    val newSavedState = !action.card.isSaved
-                                    contentRepository.updateSavedStatus(action.card.id, newSavedState)
-                                    val currentIds = savedCardIds.value.toMutableSet()
-                                    if (newSavedState) {
-                                        currentIds.add(action.card.id)
-                                    } else {
-                                        currentIds.remove(action.card.id)
+            CompositionLocalProvider(
+                LocalContext provides localizedContext,
+                LocalConfiguration provides localizedContext.resources.configuration,
+                LocalLayoutDirection provides layoutDirection
+            ) {
+                EyeGuardTheme {
+                    BreakOverlayContent(
+                        remainingSeconds = remainingSeconds.collectAsState().value,
+                        totalBreakDuration = breakDurationSeconds,
+                        finished = finished.collectAsState().value,
+                        onAction = { action ->
+                            when (action) {
+                                BreakAction.Continue -> handleContinue()
+                                is BreakAction.SaveCard -> {
+                                    lifecycleScope.launch {
+                                        val newSavedState = !action.card.isSaved
+                                        contentRepository.updateSavedStatus(action.card.id, newSavedState)
+                                        val currentIds = savedCardIds.value.toMutableSet()
+                                        if (newSavedState) {
+                                            currentIds.add(action.card.id)
+                                        } else {
+                                            currentIds.remove(action.card.id)
+                                        }
+                                        savedCardIds.value = currentIds
                                     }
-                                    savedCardIds.value = currentIds
                                 }
                             }
-                        }
-                    },
-                    contentCards = contentCards.collectAsState().value,
-                    savedCardIds = savedCardIds.collectAsState().value
-                )
+                        },
+                        contentCards = contentCards.collectAsState().value,
+                        savedCardIds = savedCardIds.collectAsState().value
+                    )
+                }
             }
         }
 
@@ -497,8 +548,8 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
             Log.e(TAG, "Overlay failed: windowManager.addView threw", throwable)
             releaseWakeLock()
             showErrorNotification(
-                getString(R.string.error_overlay_failed_title),
-                getString(
+                localizedContext.getString(R.string.error_overlay_failed_title),
+                localizedContext.getString(
                     R.string.error_overlay_failed_detail,
                     throwable.message ?: throwable.javaClass.simpleName
                 )
@@ -508,7 +559,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
         }
 
         if (!isReminder) {
-            showRemindButton()
+            showRemindButton(languageCode)
         }
 
         breakJob?.cancel()
@@ -650,7 +701,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
         }
     }
 
-    private fun showRemindButton() {
+    private fun showRemindButton(languageCode: String = currentLanguageCode) {
         if (remindButtonView != null) return
 
         val buttonView = ComposeView(this)
@@ -660,22 +711,32 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
             ViewCompositionStrategy.DisposeOnDetachedFromWindow
         )
 
+        val localizedContext = getLocalizedContext(languageCode)
+        val isEn = languageCode == "en"
+        val layoutDirection = if (isEn) LayoutDirection.Ltr else LayoutDirection.Rtl
+
         buttonView.setContent {
-            EyeGuardTheme {
-                OutlinedButton(
-                    onClick = { handleRemindLater() },
-                    modifier = Modifier
-                        .widthIn(min = 240.dp)
-                        .height(48.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = TextSecondary
-                    ),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.remind_later),
-                        fontSize = 14.sp
-                    )
+            CompositionLocalProvider(
+                LocalContext provides localizedContext,
+                LocalConfiguration provides localizedContext.resources.configuration,
+                LocalLayoutDirection provides layoutDirection
+            ) {
+                EyeGuardTheme {
+                    OutlinedButton(
+                        onClick = { handleRemindLater() },
+                        modifier = Modifier
+                            .widthIn(min = 240.dp)
+                            .height(48.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = TextSecondary
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            text = localizedContext.getString(R.string.remind_later),
+                            fontSize = 14.sp
+                        )
+                    }
                 }
             }
         }

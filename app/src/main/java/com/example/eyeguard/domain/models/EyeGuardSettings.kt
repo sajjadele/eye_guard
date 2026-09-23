@@ -18,9 +18,14 @@ data class EyeGuardSettings(
     val workIntervalMinutes: Int = DEFAULT_WORK_MINUTES,
     val breakDurationSeconds: Int = DEFAULT_BREAK_SECONDS,
     val breakEndAlertType: BreakEndAlertType = DEFAULT_BREAK_END_ALERT,
-    val themeMode: AppThemeMode = AppThemeMode.DARK
+    val themeMode: AppThemeMode = AppThemeMode.DARK,
+    val languageCode: String = DEFAULT_LANGUAGE
 ) {
     companion object {
+        const val DEFAULT_LANGUAGE = "fa"
+        const val LANGUAGE_PERSIAN = "fa"
+        const val LANGUAGE_ENGLISH = "en"
+
         const val DEFAULT_WORK_MINUTES = 20
         const val DEFAULT_BREAK_SECONDS = 30
 
