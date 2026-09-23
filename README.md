@@ -44,7 +44,7 @@ Most reminder apps fail because notifications are too easy to swipe away and ign
 
 | # | Principle | Description |
 |---|-----------|-------------|
-| 1 | **Offline-First & Privacy** | Core protection works 100% offline. Read-only network access is solely used for optional eye care tips updates. Zero telemetry, zero analytics, zero data collection. |
+| 1 | **Offline-First Core** | EyeGuard is offline-first. Its core eye-protection features run locally on the device. Internet access is used only when needed to retrieve updated health-care content/cards. Previously available content can remain accessible locally. EyeGuard does not use the network for analytics, tracking, or telemetry. |
 | 2 | **Zero Friction** | No accounts, no onboarding mazes, no paywalls, and absolutely no ads. |
 | 3 | **Unignorable Rest** | The break overlay cannot be accidentally swiped away until the timer completes. |
 | 4 | **Battery & System Friendly** | Uses Android's native `AlarmManager` and low-overhead foreground service. |
@@ -113,8 +113,13 @@ Download official, signed release artifacts directly from GitHub Releases:
 ### Verifying Release Integrity (SHA-256)
 Every release includes a companion `.sha256` checksum file. You can verify your downloaded APK matches the CI build:
 ```bash
-sha256sum -c EyeGuard-v1.4.0.apk.sha256
+sha256sum -c EyeGuard-v1.4.1.apk.sha256
 ```
+
+### 🔏 Production Signing Certificate Fingerprint
+The official APK is signed with the EyeGuard release key:
+* **SHA-256 Fingerprint**: `92:A9:F2:89:F8:FA:3B:AD:E6:6A:FC:28:E8:20:57:E1:CA:5C:30:E1:C5:F0:C3:A3:85:28:C6:44:02:AA:79:7F`
+* **Algorithm**: 2048-bit RSA (V1, V2, V3, and V4 APK signature schemes)
 
 ### Required Permissions Explained
 
@@ -162,7 +167,7 @@ io.github.sajjadele.eyeguard
 
 ### 🛡️ اصول غیرقابل مذاکره ما
 
-1. **آفلاین‌محور و حریم خصوصی مطلق:** هسته اصلی حفاظت از چشم کاملاً محلی و آفلاین کار می‌کند. دسترسی اینترنت صرفاً برای دریافت نکات جدید سلامت چشم به صورت فقط‌خواندنی است. هیچ اطلاعاتی از کاربر، تحلیل‌گری یا رهگیری وجود ندارد.
+1. **هسته آفلاین‌محور و احترام به حریم خصوصی:** قابلیت‌های اصلی محافظت از چشم کاملاً محلی روی دستگاه اجرا می‌شوند. دسترسی اینترنت منحصراً در صورت نیاز برای دریافت کارت‌ها و نکات جدید سلامت چشم استفاده می‌شود و داده‌های قبلی به صورت محلی در دسترس باقی می‌مانند. هیچ‌گونه تحلیل‌گری، رهگیری یا جمع‌آوری داده وجود ندارد.
 2. **بدون تبلیغات و بدون هزینه:** بدون نیاز به ساخت حساب کاربری، بدون تبلیغات و کاملاً متن‌باز.
 3. **استراحت واقعی:** تا پایان ثانیه‌شمار استراحت، صفحه ناخواسته بسته نمی‌شود تا استراحت چشم حفظ شود.
 4. **بهینه برای باتری:** استفاده از ابزارهای بومی اندروید (`AlarmManager`) برای صفر کردن مصرف باتری در پس‌زمینه.

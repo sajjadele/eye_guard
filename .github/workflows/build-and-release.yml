@@ -25,10 +25,9 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    name: Build Android APK
+  validate_pr_and_ci:
+    name: Build & Validate (Debug)
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -47,12 +46,49 @@ jobs:
       - name: Grant Execute Permission to Gradlew
         run: chmod +x ./gradlew
 
+      - name: Validate Build
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+
+  production_release:
+    name: Production Release Signing & Publish
+    needs: [validate_pr_and_ci]
+    if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && github.event.inputs.create_release == 'true')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          validate-wrappers: false
+
+      - name: Grant Execute Permission to Gradlew
+        run: chmod +x ./gradlew
+
+      - name: Validate Production Signing Secrets (Mandatory)
+        run: |
+          MISSING=""
+          if [ -z "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" ]; then MISSING="${MISSING} RELEASE_KEYSTORE_BASE64"; fi
+          if [ -z "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" ]; then MISSING="${MISSING} RELEASE_KEYSTORE_PASSWORD"; fi
+          if [ -z "${{ secrets.RELEASE_KEY_ALIAS }}" ]; then MISSING="${MISSING} RELEASE_KEY_ALIAS"; fi
+          if [ -z "${{ secrets.RELEASE_KEY_PASSWORD }}" ]; then MISSING="${MISSING} RELEASE_KEY_PASSWORD"; fi
+          
+          if [ -n "$MISSING" ]; then
+            echo "::error::Production release aborted! Required secrets missing:${MISSING}"
+            exit 1
+          fi
+          echo "All production signing secrets verified."
+
       - name: Decode Release Keystore
-        if: ${{ env.HAS_KEYSTORE == 'true' }}
         run: |
           echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > /tmp/release.jks
-        env:
-          HAS_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE_BASE64 != '' }}
 
       - name: Build Release APK
         run: ./gradlew assembleRelease --no-daemon --stacktrace
@@ -74,7 +110,7 @@ jobs:
             VERSION="${{ github.event.inputs.release_version }}"
           fi
           if [[ -z "$VERSION" || "$VERSION" == "main" ]]; then
-            VERSION="v1.4.0"
+            VERSION="v1.4.1"
           fi
           
           mkdir -p dist
@@ -102,7 +138,6 @@ jobs:
           retention-days: 14
 
       - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && github.event.inputs.create_release == 'true')
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.apk_asset.outputs.version }}
@@ -111,15 +146,20 @@ jobs:
             ## 👁️ EyeGuard Android Release (${{ steps.apk_asset.outputs.version }})
 
             ### What's New:
-            - **Privacy-First & Offline-First**: All eye protection routines work 100% locally on device.
-            - **Official Application ID**: `io.github.sajjadele.eyeguard`.
-            - **Verified Production Signing**: Signed with official reproducible credentials.
-            - **Dynamic Eye Care Tips**: Periodic updates to eye care tips and health guidance.
+            - **Target SDK 36 (Android 16)**: Updated to modern Android 16 platform standards.
+            - **Offline-First Core**: All core eye protection routines run locally on the device without network dependencies.
+            - **Health Care Content Updates**: Non-intrusive, read-only sync of updated eye-care tips without analytics or tracking.
+            - **Mandatory Production Signing**: Signed with official reproducible credentials.
 
             ### Integrity & Verification:
             | Asset | SHA-256 Checksum |
             | :--- | :--- |
             | `EyeGuard-${{ steps.apk_asset.outputs.version }}.apk` | `${{ steps.apk_asset.outputs.sha256 }}` |
+
+            ### 🔏 Production Certificate Fingerprint:
+            | Algorithm | Fingerprint |
+            | :--- | :--- |
+            | **SHA-256** | `92:A9:F2:89:F8:FA:3B:AD:E6:6A:FC:28:E8:20:57:E1:CA:5C:30:E1:C5:F0:C3:A3:85:28:C6:44:02:AA:79:7F` |
 
             Verify download integrity via terminal:
             ```bash

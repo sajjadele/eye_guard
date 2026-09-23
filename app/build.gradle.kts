@@ -10,14 +10,14 @@ plugins {
 
 android {
     namespace = "com.example.eyeguard"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "io.github.sajjadele.eyeguard"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 6
-        versionName = "1.4.0"
+        targetSdk = 36
+        versionCode = 7
+        versionName = "1.4.1"
         buildConfigField("boolean", "DEBUG_TEST_INTERVAL", "false")
     }
 
@@ -42,6 +42,26 @@ android {
         ?: localProps.getProperty("release.key.password")
         ?: keystorePassword
 
+    gradle.taskGraph.whenReady {
+        val isReleaseRequested = allTasks.any { task ->
+            task.name.contains("Release", ignoreCase = true) && !task.name.contains("Test", ignoreCase = true)
+        }
+        if (isReleaseRequested) {
+            if (!releaseKeystoreFile.exists()) {
+                throw GradleException(
+                    "BUILD FAILED: Release keystore file not found at '${releaseKeystoreFile.absolutePath}'. " +
+                    "Production release builds strictly require a valid keystore. Silent fallback to debug is forbidden."
+                )
+            }
+            if (keystorePassword.isNullOrBlank()) {
+                throw GradleException(
+                    "BUILD FAILED: Release keystore password is missing. " +
+                    "Production release builds strictly require valid credentials. Silent fallback to debug is forbidden."
+                )
+            }
+        }
+    }
+
     signingConfigs {
         create("release") {
             if (releaseKeystoreFile.exists() && !keystorePassword.isNullOrBlank()) {
@@ -49,13 +69,12 @@ android {
                 storePassword = keystorePassword
                 this.keyAlias = keyAlias
                 this.keyPassword = keyPassword
-            } else {
-                initWith(getByName("debug"))
+                enableV1Signing = true
+                enableV2Signing = true
+                enableV3Signing = true
+                enableV4Signing = true
             }
-            enableV1Signing = true
-            enableV2Signing = true
-            enableV3Signing = true
-            enableV4Signing = true
+            // Strict release engineering: Absolutely NO fallback to debug signing
         }
     }
 
