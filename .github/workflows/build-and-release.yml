@@ -47,10 +47,26 @@ jobs:
       - name: Grant Execute Permission to Gradlew
         run: chmod +x ./gradlew
 
+      - name: Decode Release Keystore
+        if: ${{ env.HAS_KEYSTORE == 'true' }}
+        run: |
+          echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > /tmp/release.jks
+        env:
+          HAS_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE_BASE64 != '' }}
+
       - name: Build Release APK
         run: ./gradlew assembleRelease --no-daemon --stacktrace
+        env:
+          KEYSTORE_FILE: /tmp/release.jks
+          KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
 
-      - name: Prepare APK Asset
+      - name: Clean Keystore
+        if: always()
+        run: rm -f /tmp/release.jks
+
+      - name: Prepare APK Asset & Checksum
         id: apk_asset
         run: |
           VERSION="${{ github.ref_name }}"
@@ -58,19 +74,31 @@ jobs:
             VERSION="${{ github.event.inputs.release_version }}"
           fi
           if [[ -z "$VERSION" || "$VERSION" == "main" ]]; then
-            VERSION="v1.0.0"
+            VERSION="v1.4.0"
           fi
           
           mkdir -p dist
-          cp app/build/outputs/apk/release/app-release.apk dist/EyeGuard-${VERSION}.apk
-          echo "apk_path=dist/EyeGuard-${VERSION}.apk" >> $GITHUB_OUTPUT
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          APK_FILE="EyeGuard-${VERSION}.apk"
+          SHA_FILE="EyeGuard-${VERSION}.apk.sha256"
 
-      - name: Upload APK as Workflow Artifact
+          cp app/build/outputs/apk/release/app-release.apk "dist/${APK_FILE}"
+          cd dist
+          sha256sum "${APK_FILE}" > "${SHA_FILE}"
+          SHA_VALUE=$(awk '{print $1}' "${SHA_FILE}")
+          cd ..
+
+          echo "apk_path=dist/${APK_FILE}" >> $GITHUB_OUTPUT
+          echo "sha_path=dist/${SHA_FILE}" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "sha256=${SHA_VALUE}" >> $GITHUB_OUTPUT
+
+      - name: Upload APK & Checksum as Workflow Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: EyeGuard-${{ steps.apk_asset.outputs.version }}
-          path: ${{ steps.apk_asset.outputs.apk_path }}
+          path: |
+            ${{ steps.apk_asset.outputs.apk_path }}
+            ${{ steps.apk_asset.outputs.sha_path }}
           retention-days: 14
 
       - name: Create GitHub Release
@@ -83,15 +111,28 @@ jobs:
             ## 👁️ EyeGuard Android Release (${{ steps.apk_asset.outputs.version }})
 
             ### What's New:
-            - Offline-first background eye protection service.
-            - Configurable interval reminders and gentle visual break overlays.
-            - Low battery and system impact.
+            - **Privacy-First & Offline-First**: All eye protection routines work 100% locally on device.
+            - **Official Application ID**: `io.github.sajjadele.eyeguard`.
+            - **Verified Production Signing**: Signed with official reproducible credentials.
+            - **Dynamic Eye Care Tips**: Periodic updates to eye care tips and health guidance.
+
+            ### Integrity & Verification:
+            | Asset | SHA-256 Checksum |
+            | :--- | :--- |
+            | `${{ steps.apk_asset.outputs.version }}.apk` | `${{ steps.apk_asset.outputs.sha256 }}` |
+
+            Verify download integrity via terminal:
+            ```bash
+            sha256sum -c EyeGuard-${{ steps.apk_asset.outputs.version }}.apk.sha256
+            ```
 
             ### Installation:
             1. Download `EyeGuard-${{ steps.apk_asset.outputs.version }}.apk` below on your Android device.
-            2. Tap to install (enable "Install from unknown sources" if prompted).
-            3. Grant the overlay permission and start protecting your eyes!
-          files: ${{ steps.apk_asset.outputs.apk_path }}
+            2. Tap to install (allow "Install unknown apps" if prompted).
+            3. Grant the overlay and notification permissions to start protecting your eyes!
+          files: |
+            ${{ steps.apk_asset.outputs.apk_path }}
+            ${{ steps.apk_asset.outputs.sha_path }}
           draft: false
           prerelease: false
         env:

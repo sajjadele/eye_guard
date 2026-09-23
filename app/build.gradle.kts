@@ -10,20 +10,45 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.eyeguard"
+        applicationId = "io.github.sajjadele.eyeguard"
         minSdk = 24
         targetSdk = 34
-        versionCode = 5
-        versionName = "1.3.1"
+        versionCode = 6
+        versionName = "1.4.0"
         buildConfigField("boolean", "DEBUG_TEST_INTERVAL", "false")
     }
 
+    val localProps = java.util.Properties().apply {
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.inputStream().use { load(it) }
+        }
+    }
+
+    val keystorePath = System.getenv("KEYSTORE_FILE")
+        ?: localProps.getProperty("release.keystore.file")
+        ?: "${System.getProperty("user.home")}/.eye_guard/release.jks"
+    val releaseKeystoreFile = file(keystorePath)
+
+    val keystorePassword = System.getenv("KEYSTORE_PASSWORD")
+        ?: localProps.getProperty("release.keystore.password")
+    val keyAlias = System.getenv("KEY_ALIAS")
+        ?: localProps.getProperty("release.key.alias")
+        ?: "eyeguard"
+    val keyPassword = System.getenv("KEY_PASSWORD")
+        ?: localProps.getProperty("release.key.password")
+        ?: keystorePassword
+
     signingConfigs {
         create("release") {
-            storeFile = file("${rootDir}/keystore/release.jks")
-            storePassword = "eyeguard_release_pass"
-            keyAlias = "eyeguard_key"
-            keyPassword = "eyeguard_release_pass"
+            if (releaseKeystoreFile.exists() && !keystorePassword.isNullOrBlank()) {
+                storeFile = releaseKeystoreFile
+                storePassword = keystorePassword
+                this.keyAlias = keyAlias
+                this.keyPassword = keyPassword
+            } else {
+                initWith(getByName("debug"))
+            }
             enableV1Signing = true
             enableV2Signing = true
             enableV3Signing = true

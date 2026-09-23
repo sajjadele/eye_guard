@@ -9,3 +9,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Android Keystore & Certificates (Never commit to Git!)
+*.jks
+*.keystore
+keystore/

@@ -20,7 +20,7 @@
   <img src="https://img.shields.io/badge/Android-7.0%2B%20(API%2024%2B)-3DDC84?style=flat-square&logo=android" alt="Min SDK">
   <img src="https://img.shields.io/badge/Kotlin-2.0.0-7F52FF?style=flat-square&logo=kotlin" alt="Kotlin">
   <img src="https://img.shields.io/badge/UI-Jetpack%20Compose%20M3-4285F4?style=flat-square" alt="Compose">
-  <img src="https://img.shields.io/badge/Privacy-100%25%20Offline-success?style=flat-square" alt="Offline">
+  <img src="https://img.shields.io/badge/Privacy-Offline--First%20%26%20Zero%20Telemetry-success?style=flat-square" alt="Privacy">
   <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="License">
 </p>
 
@@ -44,7 +44,7 @@ Most reminder apps fail because notifications are too easy to swipe away and ign
 
 | # | Principle | Description |
 |---|-----------|-------------|
-| 1 | **100% Offline** | Zero network calls. No telemetry, no third-party SDKs, no cloud dependencies. |
+| 1 | **Offline-First & Privacy** | Core protection works 100% offline. Read-only network access is solely used for optional eye care tips updates. Zero telemetry, zero analytics, zero data collection. |
 | 2 | **Zero Friction** | No accounts, no onboarding mazes, no paywalls, and absolutely no ads. |
 | 3 | **Unignorable Rest** | The break overlay cannot be accidentally swiped away until the timer completes. |
 | 4 | **Battery & System Friendly** | Uses Android's native `AlarmManager` and low-overhead foreground service. |
@@ -100,15 +100,21 @@ stateDiagram-v2
 
 ---
 
-## 📲 Download & Installation
+## 📲 Download & Verification
 
-You can download the pre-compiled, verified release directly:
+Download official, signed release artifacts directly from GitHub Releases:
 
 <p align="center">
   <a href="https://github.com/sajjadele/eye_guard/releases/latest">
-    <img src="https://img.shields.io/badge/Download-Latest%20APK%20(v1.0.0)-10B981?style=for-the-badge&logo=android&logoColor=white" alt="Download APK">
+    <img src="https://img.shields.io/badge/Download-Latest%20Release%20APK-10B981?style=for-the-badge&logo=android&logoColor=white" alt="Download APK">
   </a>
 </p>
+
+### Verifying Release Integrity (SHA-256)
+Every release includes a companion `.sha256` checksum file. You can verify your downloaded APK matches the CI build:
+```bash
+sha256sum -c EyeGuard-v1.4.0.apk.sha256
+```
 
 ### Required Permissions Explained
 
@@ -117,23 +123,25 @@ EyeGuard requires only the minimum permissions necessary to function:
 * `POST_NOTIFICATIONS` (Android 13+): To show the active protection status in the notification panel.
 * `FOREGROUND_SERVICE`: To ensure the work timer continues reliably while you use other apps.
 * `SCHEDULE_EXACT_ALARM`: For exact interval timing without battery-intensive polling loops.
+* `INTERNET`: Exclusively used for read-only sync of updated eye-care tips from GitHub. No personal data, identifiers, or analytics are ever transmitted.
 
 ---
 
 ## 🏗️ Architecture & Tech Stack
 
 ```
-com.example.eyeguard
+io.github.sajjadele.eyeguard
 ├── data
+│   ├── local/db        # Room database for eye care tips & saved cards
 │   ├── preferences     # DataStore preferences & keys
 │   └── repository      # Repository implementations
 ├── domain
-│   ├── models          # EyeGuardSettings and data models
+│   ├── models          # EyeGuardSettings, ContentCard, DailyStats
 │   └── usecases        # ObserveSettingsUseCase, UpdateSettingsUseCase
 ├── presentation
-│   ├── components      # Reusable Compose widgets
-│   ├── screens         # Main screen & settings UI
-│   └── theme           # Material3 typography & colors
+│   ├── components      # Reusable Compose widgets (cards, switches, dialogs)
+│   ├── screens         # MainScreen, SettingsScreen, SavedCardsScreen
+│   └── theme           # Material3 typography, color schemes & glassmorphism
 └── service
     ├── BreakOverlay    # Compose overlay rendered via WindowManager
     └── EyeProtectionService # Android Foreground Service lifecycle
@@ -154,8 +162,8 @@ com.example.eyeguard
 
 ### 🛡️ اصول غیرقابل مذاکره ما
 
-1. **۱۰۰٪ آفلاین:** هیچ اتصال اینترنتی، ارسال داده، آنالیتیکس یا کتابخانه رهگیری وجود ندارد.
-2. **بدون تبلیغات و بدون هزینه:** بدون نیاز به ساخت حساب کاربری یا پرداخت درون‌برنامه‌ای.
+1. **آفلاین‌محور و حریم خصوصی مطلق:** هسته اصلی حفاظت از چشم کاملاً محلی و آفلاین کار می‌کند. دسترسی اینترنت صرفاً برای دریافت نکات جدید سلامت چشم به صورت فقط‌خواندنی است. هیچ اطلاعاتی از کاربر، تحلیل‌گری یا رهگیری وجود ندارد.
+2. **بدون تبلیغات و بدون هزینه:** بدون نیاز به ساخت حساب کاربری، بدون تبلیغات و کاملاً متن‌باز.
 3. **استراحت واقعی:** تا پایان ثانیه‌شمار استراحت، صفحه ناخواسته بسته نمی‌شود تا استراحت چشم حفظ شود.
 4. **بهینه برای باتری:** استفاده از ابزارهای بومی اندروید (`AlarmManager`) برای صفر کردن مصرف باتری در پس‌زمینه.
 
@@ -166,23 +174,25 @@ com.example.eyeguard
 *   ⏱️ **تنظیم دلخواه زمان:** انتخاب زمان کار (۲۰، ۳۰ یا ۶۰ دقیقه) و زمان استراحت (۲۰، ۳۰، ۶۰ یا ۹۰ ثانیه).
 *   📱 **صفحه استراحت هوشمند (Overlay):** نمایش لایه نیمه‌شفاف با انیمیشن ملایم روی تمام برنامه‌ها.
 *   🔋 **مصرف باتری بسیار پایین:** مدیریت دقیق با Foreground Service بدون درگیر کردن دائمی پردازنده.
-*   🎨 **طراحی مدرن Material 3:** رابط کاربری شکیل و هماهنگ با طراحی روز اندروید با استفاده از Jetpack Compose.
+*   🎨 **طراحی مدرن Material 3:** رابط کاربری شکیل، پشتیبانی از حالت تیره/روشن و زبان‌های فارسی و انگلیسی.
+*   💡 **بیش از ۵۰ نکته تخصصی سلامت چشم:** راهنمایی‌های بالینی برای کاهش خستگی چشم.
 
 ---
 
-### 📲 دانلود و نصب مستقیم
+### 📲 دانلود و تایید اصالت
 
-فایل نصب رسمی و امضاشده اپلیکیشن را بدون نیاز به گوگل‌پلی یا کامپایل دستی دانلود کنید:
+فایل نصب رسمی و امضاشده اپلیکیشن را دانلود کرده و با هش SHA-256 اصالت آن را بررسی کنید:
 
 <p align="center">
   <a href="https://github.com/sajjadele/eye_guard/releases/latest">
-    <img src="https://img.shields.io/badge/دانلود%20مستقیم-فایل%20APK%20نسخه%20v1.0.0-10B981?style=for-the-badge&logo=android&logoColor=white" alt="دانلود مستقیم APK">
+    <img src="https://img.shields.io/badge/دانلود%20مستقیم-فایل%20APK%20رسمی-10B981?style=for-the-badge&logo=android&logoColor=white" alt="دانلود مستقیم APK">
   </a>
 </p>
 
 #### دسترسی‌های مورد نیاز:
 * **نمایش روی سایر برنامه‌ها (Overlay):** برای اینکه صفحه استراحت هنگام موعد مقرر بتواند روی برنامه‌های در حال اجرا نمایش داده شود.
 * **نوتیفیکیشن:** برای اطلاع‌رسانی از وضعیت فعال بودن محافظت چشم در نوار اعلان‌ها.
+* **اینترنت (فقط‌خواندنی):** منحصراً برای به‌روزرسانی نکات سلامت چشم از گیت‌هاب بدون ارسال حتی ۱ بایت از اطلاعات شما.
 
 ---
 
