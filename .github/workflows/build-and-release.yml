@@ -119,7 +119,7 @@ jobs:
             ### Integrity & Verification:
             | Asset | SHA-256 Checksum |
             | :--- | :--- |
-            | `${{ steps.apk_asset.outputs.version }}.apk` | `${{ steps.apk_asset.outputs.sha256 }}` |
+            | `EyeGuard-${{ steps.apk_asset.outputs.version }}.apk` | `${{ steps.apk_asset.outputs.sha256 }}` |
 
             Verify download integrity via terminal:
             ```bash

@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -18,10 +21,10 @@ android {
         buildConfigField("boolean", "DEBUG_TEST_INTERVAL", "false")
     }
 
-    val localProps = java.util.Properties().apply {
+    val localProps = Properties().apply {
         val localPropertiesFile = rootProject.file("local.properties")
         if (localPropertiesFile.exists()) {
-            localPropertiesFile.inputStream().use { load(it) }
+            FileInputStream(localPropertiesFile).use { load(it) }
         }
     }
 
