@@ -70,9 +70,10 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun EyeGuardTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     content: @Composable () -> Unit
 ) {
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+    CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
         MaterialTheme(
             colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
             typography = EyeGuardTypography,

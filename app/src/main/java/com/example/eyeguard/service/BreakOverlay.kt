@@ -76,7 +76,9 @@ fun BreakOverlayContent(
     finished: Boolean,
     onAction: (BreakAction) -> Unit,
     contentCards: List<ContentCard> = emptyList(),
-    savedCardIds: Set<Long> = emptySet()
+    savedCardIds: Set<Long> = emptySet(),
+    secondsRemainingText: String = stringResource(R.string.break_seconds_remaining),
+    continueText: String = stringResource(R.string.break_continue)
 ) {
     LaunchedEffect(Unit) {
         Log.d(TAG, "BreakOverlay composition launched")
@@ -164,7 +166,7 @@ fun BreakOverlayContent(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = stringResource(R.string.break_seconds_remaining),
+                        text = secondsRemainingText,
                         style = MaterialTheme.typography.bodyMedium,
                         color = TextSecondary,
                         textAlign = TextAlign.Center,
@@ -185,7 +187,7 @@ fun BreakOverlayContent(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = stringResource(R.string.break_seconds_remaining),
+                        text = secondsRemainingText,
                         style = MaterialTheme.typography.bodyMedium,
                         color = TextSecondary,
                         textAlign = TextAlign.Center,
@@ -232,7 +234,7 @@ fun BreakOverlayContent(
                         shape = RoundedCornerShape(16.dp)
                     ) {
                         Text(
-                            stringResource(R.string.break_continue),
+                            text = continueText,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold
                         )

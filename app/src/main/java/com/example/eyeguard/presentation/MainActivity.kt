@@ -1,5 +1,6 @@
 package com.example.eyeguard.presentation
 
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,8 +9,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -21,6 +20,18 @@ import com.example.eyeguard.presentation.theme.EyeGuardTheme
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {
+
+    override fun attachBaseContext(newBase: Context) {
+        val prefs = newBase.getSharedPreferences("eyeguard_locale_pref", Context.MODE_PRIVATE)
+        val lang = prefs.getString("language_code", "fa") ?: "fa"
+        val locale = Locale(lang)
+        Locale.setDefault(locale)
+        val config = Configuration(newBase.resources.configuration).apply {
+            setLocale(locale)
+            setLayoutDirection(locale)
+        }
+        super.attachBaseContext(newBase.createConfigurationContext(config))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,25 +52,31 @@ class MainActivity : ComponentActivity() {
             }
 
             val languageCode = uiState.settings.languageCode
-            val locale = remember(languageCode) { Locale(languageCode) }
-            val currentContext = LocalContext.current
-
-            val localizedContext = remember(currentContext, locale) {
-                Locale.setDefault(locale)
-                val config = Configuration(currentContext.resources.configuration)
-                config.setLocale(locale)
-                config.setLayoutDirection(locale)
-                currentContext.createConfigurationContext(config)
-            }
-
             val layoutDirection = if (languageCode == "fa") LayoutDirection.Rtl else LayoutDirection.Ltr
 
+            // Keep Activity resources synchronized with user's selected language
+            val activity = this@MainActivity
+            remember(languageCode) {
+                val locale = Locale(languageCode)
+                Locale.setDefault(locale)
+                val config = Configuration(activity.resources.configuration).apply {
+                    setLocale(locale)
+                    setLayoutDirection(locale)
+                }
+                @Suppress("DEPRECATION")
+                activity.resources.updateConfiguration(config, activity.resources.displayMetrics)
+
+                activity.getSharedPreferences("eyeguard_locale_pref", Context.MODE_PRIVATE)
+                    .edit()
+                    .putString("language_code", languageCode)
+                    .apply()
+                true
+            }
+
             CompositionLocalProvider(
-                LocalContext provides localizedContext,
-                LocalConfiguration provides localizedContext.resources.configuration,
                 LocalLayoutDirection provides layoutDirection
             ) {
-                EyeGuardTheme(darkTheme = isDark) {
+                EyeGuardTheme(darkTheme = isDark, layoutDirection = layoutDirection) {
                     MainScreen(viewModel = viewModel)
                 }
             }

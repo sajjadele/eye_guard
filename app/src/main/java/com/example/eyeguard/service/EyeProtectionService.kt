@@ -31,8 +31,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
@@ -106,6 +104,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
     private var breakWakeLock: PowerManager.WakeLock? = null
     private var currentBreakEventId: Long = 0L
     private var currentLanguageCode: String = "fa"
+    private var isForegroundRunning: Boolean = false
 
     private val savedStateRegistryController = SavedStateRegistryController.create(this@EyeProtectionService)
 
@@ -228,6 +227,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
     }
 
     override fun onDestroy() {
+        isForegroundRunning = false
         cancelAlarm()
         hideOverlay()
         releaseWakeLock()
@@ -244,6 +244,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
     }
 
     private fun updateForegroundNotification(languageCode: String) {
+        if (!isForegroundRunning) return
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         try {
             notificationManager.notify(NOTIFICATION_ID, buildNotification(languageCode))
@@ -260,12 +261,14 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
                 buildNotification(currentLanguageCode),
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
             )
+            isForegroundRunning = true
         } catch (throwable: Throwable) {
             try {
                 startForeground(
                     NOTIFICATION_ID,
                     buildNotification(currentLanguageCode)
                 )
+                isForegroundRunning = true
             } catch (_: Throwable) {
                 // The app should not crash if notification cannot be shown.
             }
@@ -477,18 +480,20 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
 
         val isEn = languageCode == "en"
         val layoutDirection = if (isEn) LayoutDirection.Ltr else LayoutDirection.Rtl
+        val remainingText = localizedContext.getString(R.string.break_seconds_remaining)
+        val continueText = localizedContext.getString(R.string.break_continue)
 
         composeView.setContent {
             CompositionLocalProvider(
-                LocalContext provides localizedContext,
-                LocalConfiguration provides localizedContext.resources.configuration,
                 LocalLayoutDirection provides layoutDirection
             ) {
-                EyeGuardTheme {
+                EyeGuardTheme(layoutDirection = layoutDirection) {
                     BreakOverlayContent(
                         remainingSeconds = remainingSeconds.collectAsState().value,
                         totalBreakDuration = breakDurationSeconds,
                         finished = finished.collectAsState().value,
+                        secondsRemainingText = remainingText,
+                        continueText = continueText,
                         onAction = { action ->
                             when (action) {
                                 BreakAction.Continue -> handleContinue()
@@ -714,14 +719,13 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
         val localizedContext = getLocalizedContext(languageCode)
         val isEn = languageCode == "en"
         val layoutDirection = if (isEn) LayoutDirection.Ltr else LayoutDirection.Rtl
+        val remindText = localizedContext.getString(R.string.remind_later)
 
         buttonView.setContent {
             CompositionLocalProvider(
-                LocalContext provides localizedContext,
-                LocalConfiguration provides localizedContext.resources.configuration,
                 LocalLayoutDirection provides layoutDirection
             ) {
-                EyeGuardTheme {
+                EyeGuardTheme(layoutDirection = layoutDirection) {
                     OutlinedButton(
                         onClick = { handleRemindLater() },
                         modifier = Modifier
@@ -733,7 +737,7 @@ class EyeProtectionService : LifecycleService(), SavedStateRegistryOwner {
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
-                            text = localizedContext.getString(R.string.remind_later),
+                            text = remindText,
                             fontSize = 14.sp
                         )
                     }
